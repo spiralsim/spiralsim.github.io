@@ -11,7 +11,7 @@ var canvas, images = {
 	INFratio: 112 / 256 // ratio of infinitus' height to width
 };
 const dimensions = [960, 720];
-const assetPath = "/images";
+const assetPath = "images";
 function preload () {
 	// Load images
 	images.openingScene = loadImage(`${assetPath}/opening-scene.png`);
