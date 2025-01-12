@@ -479,7 +479,7 @@ if (false) { //devmode
 var ringX = 360, CZy, gameFade = 255, toolbarImg, infinitusFade = 0, fightPos = 240, explosionSize = 0, finishedAnim = false, endFade = 0;
 function draw () {
 	if (!loaded) {
-		document.getElementById("pjsLoadingMessage").innerHTML = '';
+		document.getElementById("loading-message").innerHTML = '';
 		loaded = true;
 	}
 	buttons.forEach(b => {

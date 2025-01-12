@@ -22,6 +22,7 @@ function preload() {
 		images.characters.push(loadImage(`${ASSET_PATH}/characters/${n}.png`)));
 	['FillerArrow', 'CannonArrow'].forEach(n =>
 		images.entities.push(loadImage(`${ASSET_PATH}/entities/${n}.png`)));
+	document.getElementById('loading-message').remove();
 }
 
 function setup() {
