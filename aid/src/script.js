@@ -1,36 +1,4 @@
-/**
- * Solutions can be found starting on line 510.
- */
-var canvas, images = {
-	openingScene: null,
-	storyline: [],
-	backgrounds: [],
-	characters: [],
-	entities: [],
-	CZratio: 158 / 256, // ratio of captain zero's width to height
-	INFratio: 112 / 256 // ratio of infinitus' height to width
-};
-const dimensions = [960, 720];
-const assetPath = "images";
-function preload () {
-	// Load images
-	images.openingScene = loadImage(`${assetPath}/opening-scene.png`);
-	for (let i = 1; i <= 3; i++) images.storyline.push(loadImage(`${assetPath}/storyline/story${i}.png`));
-	for (let i = 1; i <= levels.length; i++) images.backgrounds.push(loadImage(`${assetPath}/backgrounds/${i}.png`));
-	["CaptainZero", "Infinitus"].forEach(n => {
-		images.characters.push(loadImage(`${assetPath}/characters/${n}.png`));
-	});
-	["FillerArrow", "CannonArrow"].forEach(n => {
-		images.entities.push(loadImage(`${assetPath}/entities/${n}.png`));
-	});
-}
-function setup () {
-	canvas = createCanvas(dimensions[0], dimensions[1]);
-	canvas.parent('processingCanvas');
-	document.getElementsByTagName('body')[0].setAttribute('style', "background-color: black");
-}
-
-function Button (txt, x, y, w, h, onClick) {
+function Button(txt, x, y, w, h, onClick) {
 	this.txt = txt;
 	this.x = x;
 	this.y = y;
@@ -189,7 +157,7 @@ function Entity (x, y, w, h) {
 	};
 }
 function Player () {
-	Entity.call(this, 0, 0, playerSize * images.CZratio, playerSize);
+	Entity.call(this, 0, 0, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
 	this.spawnPos = spawnPos.copy();
 	this.spawnPos.x += (tileSize - this.w) / 2;
 
@@ -228,7 +196,7 @@ function Block (x, y, w, h, userMade) {
 	this.userMade = userMade;
 	
 	this.draw = function () {
-		fill.apply(null, levels[level - 1].blockCol);
+		fill.apply(null, LEVELS[level - 1].blockCol);
 		if (this.selected) fill(128 * (1 + sin(frameCount / 10)), 128 * (1 + sin(frameCount / 10)), 255);
 		noStroke();
 		rect(this.pos.x, this.pos.y, this.w, this.h);
@@ -298,7 +266,7 @@ function Text (txt, x, y, w) {
 	this.textW = w;
 	
 	this.draw = function () {
-		fill.apply(null, levels[level - 1].textCol);
+		fill.apply(null, LEVELS[level - 1].textCol);
 		textSize(15);
 		textAlign(CENTER, TOP);
 		text(this.txt, this.pos.x - (this.textW ? this.w / 2 : 0), this.pos.y, this.textW);
@@ -459,255 +427,9 @@ function Cannon (x, y) {
 		this.pushPlayer();
 	};
 }
-const levels = [
-	// 1
-	{
-		entities: [
-			["Block", 60, 360, 600, 30],
-			["Block", 60, 180, 30, 180],
-			["Block", 630, 180, 30, 180],
-			["Spawn", 90, 330],
-			["Finish", 600, 330, 30, 30],
-			["Block", 300, 330, 120, 30],
-			["Text", "Use the arrow keys to move. Your goal in each level is to reach the finish portal.\n\nEach time you reach the portal, you climb a little closer to infinity! However, nobody knows what waits at the end, for nobody has been there.", 360, 180, 540]
-		],
-		blockCol: [128, 64, 0],
-		textCol: [255]
-	},
-	// 2
-	{
-		entities: [
-			["Block", 60, 540, 240, 30],
-			["Spawn", 60, 510],
-			["Block", 270, 570, 180, 30],
-			["Lava", 300, 550, 120, 20],
-			["Block", 420, 510, 30, 60],
-			["Block", 450, 480, 120, 30],
-			["Block", 570, 420, 30, 30],
-			["Block", 630, 390, 30, 30],
-			["Block", 540, 330, 60, 30],
-			["Finish", 540, 300, 30, 30],
-			["Text", "Lava is dangerous. Also, don't fall into the void!", 360, 210]
-		],
-		blockCol: [0, 128, 0],
-		textCol: [255]
-	},
-	// 3
-	{
-		entities: [
-			["Block", 60, 540, 240, 30],
-			["Block", 60, 480, 30, 60],
-			["Spawn", 90, 510],
-			["Trampoline", 240, 530, 60, 10],
-
-			["Block", 270, 430, 300, 30],
-			["Trampoline", 450, 420, 120, 10],
-			["Lava", 450, 300, 30, 30],
-			["Lava", 540, 300, 30, 30],
-			["Finish", 540, 230, 30, 30],
-			["Text", "Trampolines are bouncy.", 360, 210]
-		],
-		blockCol: [128],
-		textCol: [0, 128, 0]
-	},
-	// 4
-	/**
-	 * Intended solution (numbers in brackets get used to fill, numbers/
-	 * operators in braces are carried over from previous levels):
-	 * 7 + 2 = [9]
-	 * Left over: -
-	 */
-	{
-		entities: [
-			["Block", 60, 300, 30, 60],
-			["Block", 60, 360, 240, 30],
-			["Spawn", 90, 330],
-			["_Number", 180, 330, '2'],
-			["Operator", 210, 330, '+'],
-			["_Number", 240, 330, '7'],
-			["Machine", 270, 330],
-			["Block", 570, 360, 90, 30],
-			["Finish", 630, 330, 30, 30],
-			["Text", "Numbers, operators, and a funny machine...\n\nPerhaps they can help you get across this gap?", 360, 150]
-		],
-		blockCol: [0, 192, 255],
-		textCol: [255]
-	},
-	// 5
-	/**
-	 * Intended solution (numbers in brackets get used to fill, numbers/
-	 * operators in braces are carried over from previous levels):
-	 * 4 + 1 = 5
-	 * 5 ^ 2 {-} 7 = [18]
-	 * Left over: 8, *
-	 */
-	{
-		entities: [
-			["Block", 60, 510, 150, 30],
-			["Spawn", 60, 480],
-			["_Number", 120, 450, '4'],
-			["_Number", 150, 450, '1'],
-			["_Number", 180, 450, '2'],
-			["Operator", 120, 480, '+'],
-			["Trampoline", 250, 570, 10, 30],
-			["Lava", 270, 540, 30, 90],
-			["Lava", 270, 420, 30, 30],
-			["Trampoline", 310, 600, 10, 30],
-			["Operator", 300, 540, '^'],
-
-			["Block", 300, 420, 30, 30],
-			["Block", 330, 450, 30, 30],
-			["Block", 360, 480, 60, 30],
-			["_Number", 360, 450, '7'],
-			["Block", 390, 450, 60, 30],
-			["Block", 420, 420, 30, 30],
-			["Block", 450, 360, 210, 30],
-			["Operator", 540, 330, '-'],
-			["Trampoline", 630, 350, 30, 10],
-
-			["Block", 600, 240, 30, 30],
-			["Block", 30, 240, 30, 30],
-			["Finish", 120, 120, 30, 30],
-			["Text", "Remember to be creative and use your resources.", 360, 90]
-		],
-		blockCol: [255],
-		textCol: [255]
-	},
-	// 6
-	/**
-	 * Intended solution (numbers in brackets get used to fill, numbers/
-	 * operators in braces are carried over from previous levels):
-	 * {8} / 2 = [4] (use to block the space under the group of 8 cannons)
-	 * Left over: *
-	 */
-	{
-		entities: [
-			["Block", 60, 420, 30, 60],
-			["Block", 60, 480, 120, 30],
-			["Spawn", 90, 450],
-			["_Number", 210, 420, '8'],
-			["Block", 270, 480, 150, 30],
-			["_Number", 330, 450, '2'],
-			["Operator", 150, 450, '/'],
-			["Lava", 420, 510, 90, 30],
-			["Block", 510, 480, 150, 30],
-			["Trampoline", 630, 470, 30, 10],
-
-			["Block", 270, 240, 30, 60],
-			["Cannon", 240, 270],
-			["Block", 300, 270, 330, 30],
-			["Block", 420, 360, 30, 30],
-			["Cannon", 480, 300],
-			["Cannon", 510, 300],
-			["Cannon", 540, 300],
-			["Cannon", 570, 300],
-			["Cannon", 480, 330],
-			["Cannon", 510, 330],
-			["Cannon", 540, 330],
-			["Cannon", 570, 330],
-			["Block", 570, 360, 60, 30],
-			["Block", 600, 300, 30, 60],
-			["Finish", 300, 240, 30, 30],
-			
-			["Text", "This is the cannon, the last object type you'll see.", 360, 150]
-		],
-		blockCol: [255, 128, 0],
-		textCol: [255]
-	},
-	// 7
-	/**
-	 * Intended solution (numbers in brackets get used to fill, numbers/
-	 * operators in braces are carried over from previous levels):
-	 * √(4) = [2]
-	 * 9 + 5 - 1 = [13]
-	 */
-	{
-		entities: [
-			["Block", 60, 630, 150, 30],
-			["Spawn", 60, 600],
-			["_Number", 120, 600, '9'],
-			["_Number", 180, 600, '1'],
-			["Cannon", 120, 480],
-			["Lava", 210, 630, 90, 30],
-			["Operator", 240, 570, '√'],
-			["Block", 300, 630, 30, 30],
-			["Trampoline", 300, 620, 30, 10],
-			["Block", 360, 630, 30, 30],
-			["Trampoline", 360, 620, 30, 10],
-			["Operator", 330, 570, '('],
-			["Cannon", 390, 510],
-			["Operator", 330, 480, ')'],
-
-			["Block", 390, 480, 240, 30],
-			["_Number", 390, 450, '5'],
-			["Operator", 420, 450, '-'],
-			["Trampoline", 600, 470, 30, 10],
-			["Operator", 600, 390, '+'],
-			["Block", 390, 390, 210, 30],
-			["Block", 180, 390, 30, 30],
-			["_Number", 180, 360, '4'],
-			["Block", 60, 450, 120, 30],
-			["Trampoline", 60, 440, 30, 10],
-
-			["Block", 100, 330, 20, 30],
-			["Trampoline", 120, 330, 510, 30],
-			["Trampoline", 90, 320, 60, 10],
-			["Trampoline", 90, 330, 10, 30],
-			["Cannon", 600, 300],
-			["Cannon", 600, 270],
-			["Cannon", 570, 300],
-			["Cannon", 570, 270],
-			["Cannon", 540, 300],
-			["Cannon", 540, 270],
-			["Cannon", 510, 300],
-			["Cannon", 510, 270],
-			["Block", 100, 210, 20, 60],
-			["Trampoline", 90, 210, 10, 60],
-			["Trampoline", 120, 240, 510, 30],
-			["Trampoline", 90, 270, 60, 10],
-			["Trampoline", 630, 240, 30, 120],
-			
-			["Block", 120, 180, 30, 30],
-			["Block", 120, 210, 30, 30],
-			["Lava", 150, 210, 510, 30],
-			["Block", 540, 180, 120, 30],
-			["Finish", 630, 150, 30, 30],
-			
-			["Text", "Put it all together now!", 360, 90, 540]
-		],
-		blockCol: [128, 64, 128],
-		textCol: [255]
-	},
-	// 8
-	/**
-	 * Intended solution (numbers in brackets get used to fill, numbers/
-	 * operators in braces are carried over from previous levels):
-	 * e ^ (i * π) + 9 = [8]
-	 * Left over: None
-	 */
-	{
-		entities: [
-			["Block", 60, 360, 300, 30],
-			["Spawn", 60, 330],
-			["_Number", 90, 330, 'i'],
-			["Operator", 120, 330, '('],
-			["_Number", 150, 330, '9'],
-			["Operator", 180, 330, '*'],
-			["Operator", 210, 330, ')'],
-			["_Number", 240, 330, 'e'],
-			["Operator", 270, 330, '+'],
-			["_Number", 300, 330, 'π'],
-			["Operator", 330, 330, '^'],
-			["Block", 600, 360, 120, 30],
-			["Finish", 690, 330, 30, 30]
-		],
-		blockCol: [64],
-		textCol: [255]
-	}
-];
 function generateLevel () {
 	entities = [];
-	levels[level - 1].entities.forEach(entity => {
+	LEVELS[level - 1].entities.forEach(entity => {
 		const newEntity = eval(`new ${entity[0]}(${JSON.stringify(entity.slice(1)).replace(/\[|\]/g, '')})`);
 		// If the entity is a number or operator, make sure it has not already been picked up in the current game
 		var alreadyPickedUp = false;
@@ -859,7 +581,7 @@ imaginable. It was just about as wide as the three was high.`, 80, 80, 800);
 				case 6:
 					text(`Of course, Milo could never reach Infinity, for he is only a mortal.
 But you are no mere mortal. You are Captain Zero; it is your destiny to meet the immortal Infinitus.`, 120, 180, 720);
-					image(images.characters[0], 480 - (180 * images.CZratio) / 2, 360, 180 * images.CZratio, 180);
+					image(images.characters[0], 480 - (180 * images.CAPTAIN_ZERO_RATIO) / 2, 360, 180 * images.CAPTAIN_ZERO_RATIO, 180);
 					break;
 				default:
 					fadeTo = "Game";
@@ -873,7 +595,7 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
 			// Scene changing
 			if (nextLevel) {
 				level++;
-				if (level > levels.length) {
+				if (level > LEVELS.length) {
 					CZy = player.pos.y + player.h / 2;
 					page = "End";
 					break;
@@ -1118,21 +840,21 @@ Finally, press [Fill] to begin filling. When filling, you need to select two blo
 				gameFade -= 255 / 60;
 				imageMode(CORNER);
 				tint(255, gameFade);
-				image(images.backgrounds[levels.length - 1], 0, 0);
+				image(images.backgrounds[LEVELS.length - 1], 0, 0);
 				image(toolbarImg, 720, 0);
 				tint(255, 255);
 				ringX += 2;
 				imageMode(CENTER);
 				CZy = 360 + (CZy - 360) * 0.99;
-				image(images.characters[0], 720, CZy, playerSize * images.CZratio, playerSize);
-				scaleRing(ringX, 360, 600, levels.length);
+				image(images.characters[0], 720, CZy, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+				scaleRing(ringX, 360, 600, LEVELS.length);
 			// Animation phase 2: Zoom out to infinity
 			} else if (playerScale < 1000) {
 				playerScale *= 1.01;
 				for (let i = floor(playerScale - 10); i <= playerScale; i++) {
 					scaleRing(ringX, 360, 10 ** (i - playerScale) * 600, i);
 				}
-				image(images.characters[0], 720, 360, playerSize * images.CZratio, playerSize);
+				image(images.characters[0], 720, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
 			// Animation phase 3: Infinitus fades in and fights Captain Zero
 			} else if (!finishedAnim) {
 				if (fightPos) scaleRing(ringX, 360, 600, '∞');
@@ -1140,14 +862,14 @@ Finally, press [Fill] to begin filling. When filling, you need to select two blo
 				if (infinitusFade < 255) {
 					infinitusFade += 255 / 360;
 					tint(255, infinitusFade);
-					image(images.characters[1], 240, 360, playerSize, playerSize * images.INFratio);
+					image(images.characters[1], 240, 360, playerSize, playerSize * images.INFINITUS_RATIO);
 					tint(255, 255);
-					image(images.characters[0], 720, 360, playerSize * images.CZratio, playerSize);
+					image(images.characters[0], 720, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
 				// Characters fly at each other
 				} else if (fightPos) {
 					fightPos -= 3;
-					image(images.characters[1], 480 - fightPos, 360, playerSize, playerSize * images.INFratio);
-					image(images.characters[0], 480 + fightPos, 360, playerSize * images.CZratio, playerSize);
+					image(images.characters[1], 480 - fightPos, 360, playerSize, playerSize * images.INFINITUS_RATIO);
+					image(images.characters[0], 480 + fightPos, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
 				// Explosion
 				} else if (explosionSize < 2000) {
 					const alpha = 255 - explosionSize / 8;

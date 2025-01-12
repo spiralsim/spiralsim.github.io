@@ -1,0 +1,232 @@
+[
+	{
+		"number": 1,
+		"entities": [
+			["Block", 60, 360, 600, 30],
+			["Block", 60, 180, 30, 180],
+			["Block", 630, 180, 30, 180],
+			["Spawn", 90, 330],
+			["Finish", 600, 330, 30, 30],
+			["Block", 300, 330, 120, 30],
+			["Text", "Use the arrow keys to move. Your goal in each level is to reach the finish portal.\n\nEach time you reach the portal, you climb a little closer to infinity! However, nobody knows what waits at the end, for nobody has been there.", 360, 180, 540]
+		],
+		"blockCol": [128, 64, 0],
+		"textCol": [255]
+	},
+	{
+		"number": 2,
+		"entities": [
+			["Block", 60, 540, 240, 30],
+			["Spawn", 60, 510],
+			["Block", 270, 570, 180, 30],
+			["Lava", 300, 550, 120, 20],
+			["Block", 420, 510, 30, 60],
+			["Block", 450, 480, 120, 30],
+			["Block", 570, 420, 30, 30],
+			["Block", 630, 390, 30, 30],
+			["Block", 540, 330, 60, 30],
+			["Finish", 540, 300, 30, 30],
+			["Text", "Lava is dangerous. Also, don't fall into the void!", 360, 210]
+		],
+		"blockCol": [0, 128, 0],
+		"textCol": [255]
+	},
+	{
+		"number": 3,
+		"entities": [
+			["Block", 60, 540, 240, 30],
+			["Block", 60, 480, 30, 60],
+			["Spawn", 90, 510],
+			["Trampoline", 240, 530, 60, 10],
+
+			["Block", 270, 430, 300, 30],
+			["Trampoline", 450, 420, 120, 10],
+			["Lava", 450, 300, 30, 30],
+			["Lava", 540, 300, 30, 30],
+			["Finish", 540, 230, 30, 30],
+			["Text", "Trampolines are bouncy.", 360, 210]
+		],
+		"blockCol": [128],
+		"textCol": [0, 128, 0]
+	},
+	{
+		"number": 4,
+		"entities": [
+			["Block", 60, 300, 30, 60],
+			["Block", 60, 360, 240, 30],
+			["Spawn", 90, 330],
+			["_Number", 180, 330, "2"],
+			["Operator", 210, 330, "+"],
+			["_Number", 240, 330, "7"],
+			["Machine", 270, 330],
+			["Block", 570, 360, 90, 30],
+			["Finish", 630, 330, 30, 30],
+			["Text", "Numbers, operators, and a funny machine...\n\nPerhaps they can help you get across this gap?", 360, 150]
+		],
+		"blockCol": [0, 192, 255],
+		"textCol": [255],
+		"intended_solution": [
+			"7+2=[9]"
+		]
+	},
+	{
+		"number": 5,
+		"entities": [
+			["Block", 60, 510, 150, 30],
+			["Spawn", 60, 480],
+			["_Number", 120, 450, "4"],
+			["_Number", 150, 450, "1"],
+			["_Number", 180, 450, "2"],
+			["Operator", 120, 480, "+"],
+			["Trampoline", 250, 570, 10, 30],
+			["Lava", 270, 540, 30, 90],
+			["Lava", 270, 420, 30, 30],
+			["Trampoline", 310, 600, 10, 30],
+			["Operator", 300, 540, "^"],
+
+			["Block", 300, 420, 30, 30],
+			["Block", 330, 450, 30, 30],
+			["Block", 360, 480, 60, 30],
+			["_Number", 360, 450, "7"],
+			["Block", 390, 450, 60, 30],
+			["Block", 420, 420, 30, 30],
+			["Block", 450, 360, 210, 30],
+			["Operator", 540, 330, "-"],
+			["Trampoline", 630, 350, 30, 10],
+
+			["Block", 600, 240, 30, 30],
+			["Block", 30, 240, 30, 30],
+			["Finish", 120, 120, 30, 30],
+			["Text", "Remember to be creative and use your resources.", 360, 90]
+		],
+		"blockCol": [255],
+		"textCol": [255],
+		"intended_solution": [
+			"4+1=5",
+			"5^2-7=[18]"
+		]
+	},
+	{
+		"number": 6,
+		"entities": [
+			["Block", 60, 420, 30, 60],
+			["Block", 60, 480, 120, 30],
+			["Spawn", 90, 450],
+			["_Number", 210, 420, "8"],
+			["Block", 270, 480, 150, 30],
+			["_Number", 330, 450, "2"],
+			["Operator", 150, 450, "/"],
+			["Lava", 420, 510, 90, 30],
+			["Block", 510, 480, 150, 30],
+			["Trampoline", 630, 470, 30, 10],
+
+			["Block", 270, 240, 30, 60],
+			["Cannon", 240, 270],
+			["Block", 300, 270, 330, 30],
+			["Block", 420, 360, 30, 30],
+			["Cannon", 480, 300],
+			["Cannon", 510, 300],
+			["Cannon", 540, 300],
+			["Cannon", 570, 300],
+			["Cannon", 480, 330],
+			["Cannon", 510, 330],
+			["Cannon", 540, 330],
+			["Cannon", 570, 330],
+			["Block", 570, 360, 60, 30],
+			["Block", 600, 300, 30, 60],
+			["Finish", 300, 240, 30, 30],
+			
+			["Text", "This is the cannon, the last object type you'll see.", 360, 150]
+		],
+		"blockCol": [255, 128, 0],
+		"textCol": [255],
+		"intended_solution": [
+			"8/2=[4] (use to block the space under the group of 8 cannons)"
+		]
+	},
+	{
+		"number": 7,
+		"entities": [
+			["Block", 60, 630, 150, 30],
+			["Spawn", 60, 600],
+			["_Number", 120, 600, "9"],
+			["_Number", 180, 600, "1"],
+			["Cannon", 120, 480],
+			["Lava", 210, 630, 90, 30],
+			["Operator", 240, 570, "√"],
+			["Block", 300, 630, 30, 30],
+			["Trampoline", 300, 620, 30, 10],
+			["Block", 360, 630, 30, 30],
+			["Trampoline", 360, 620, 30, 10],
+			["Operator", 330, 570, "("],
+			["Cannon", 390, 510],
+			["Operator", 330, 480, ")"],
+
+			["Block", 390, 480, 240, 30],
+			["_Number", 390, 450, "5"],
+			["Operator", 420, 450, "-"],
+			["Trampoline", 600, 470, 30, 10],
+			["Operator", 600, 390, "+"],
+			["Block", 390, 390, 210, 30],
+			["Block", 180, 390, 30, 30],
+			["_Number", 180, 360, "4"],
+			["Block", 60, 450, 120, 30],
+			["Trampoline", 60, 440, 30, 10],
+
+			["Block", 100, 330, 20, 30],
+			["Trampoline", 120, 330, 510, 30],
+			["Trampoline", 90, 320, 60, 10],
+			["Trampoline", 90, 330, 10, 30],
+			["Cannon", 600, 300],
+			["Cannon", 600, 270],
+			["Cannon", 570, 300],
+			["Cannon", 570, 270],
+			["Cannon", 540, 300],
+			["Cannon", 540, 270],
+			["Cannon", 510, 300],
+			["Cannon", 510, 270],
+			["Block", 100, 210, 20, 60],
+			["Trampoline", 90, 210, 10, 60],
+			["Trampoline", 120, 240, 510, 30],
+			["Trampoline", 90, 270, 60, 10],
+			["Trampoline", 630, 240, 30, 120],
+			
+			["Block", 120, 180, 30, 30],
+			["Block", 120, 210, 30, 30],
+			["Lava", 150, 210, 510, 30],
+			["Block", 540, 180, 120, 30],
+			["Finish", 630, 150, 30, 30],
+			
+			["Text", "Put it all together now!", 360, 90, 540]
+		],
+		"blockCol": [128, 64, 128],
+		"textCol": [255],
+		"intended_solution": [
+			"√(4)=[2]",
+			"9+5-1=[13]"
+		]
+	},
+	{
+		"number": 8,
+		"entities": [
+			["Block", 60, 360, 300, 30],
+			["Spawn", 60, 330],
+			["_Number", 90, 330, "i"],
+			["Operator", 120, 330, "("],
+			["_Number", 150, 330, "9"],
+			["Operator", 180, 330, "*"],
+			["Operator", 210, 330, ")"],
+			["_Number", 240, 330, "e"],
+			["Operator", 270, 330, "+"],
+			["_Number", 300, 330, "π"],
+			["Operator", 330, 330, "^"],
+			["Block", 600, 360, 120, 30],
+			["Finish", 690, 330, 30, 30]
+		],
+		"blockCol": [64],
+		"textCol": [255],
+		"intended_solution": [
+			"e^(i*π)+9=[8]"
+		]
+	}
+]
