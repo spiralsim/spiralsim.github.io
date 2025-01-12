@@ -22,16 +22,20 @@ function preload() {
 		images.characters.push(loadImage(`${ASSET_PATH}/characters/${n}.png`)));
 	['FillerArrow', 'CannonArrow'].forEach(n =>
 		images.entities.push(loadImage(`${ASSET_PATH}/entities/${n}.png`)));
-	document.getElementById('loading-message').remove();
+	document.getElementById('p5_loading').remove();
 }
 
 function setup() {
-    canvas = createCanvas(DIMENSIONS[0], DIMENSIONS[1]);
-	canvas.parent('processingCanvas');
+    canvas = createCanvas(windowWidth, windowHeight);
+	canvas.parent('body');
 	document.getElementsByTagName('body')[0].setAttribute('style', 'background-color: black');
 
     var mgr = new SceneManager();
     // mgr.bkImage = bkImage; // inject bkImage property
     mgr.wire();
     mgr.showScene(Menu);
+}
+
+function windowResized() {
+	resizeCanvas(windowWidth, windowHeight);
 }

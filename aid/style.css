@@ -3,20 +3,10 @@
 }
 
 body {
-	margin: 0px;
-	text-align: center;
-}
-
-#processingCanvas {
-	position: fixed;
-	top: 50%;
-	margin-top: -360px;
-	left: 50%;
-	margin-left: -480px;
-	height: 100%;
-	display: inline-block;
-}
-
-#p5_loading {
-	display: none;
+	margin: 0;
+	height: 100vh;
+	background-color: black;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

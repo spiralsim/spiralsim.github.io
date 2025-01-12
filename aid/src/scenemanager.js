@@ -1,15 +1,9 @@
 //
-// p5 SceneManager helps you create p5.js sketches with multiple states / scenes
-// Each scene is a like a sketch within the main sketch. You focus on creating
-// the scene like a regular sketch and SceneManager ensure scene switching
-// routing the main setup(), draw(), mousePressed(), etc. events to the 
-// appropriate current scene.
-//
-// Author: Marian Veteanu
-// http://github.com/mveteanu
-//
-function SceneManager(p)
-{
+// Adapted from p5.SceneManager (licensed under CC BY 2.0)
+// https://github.com/mveteanu/p5.SceneManager
+// 
+
+function SceneManager(p) {
     this.scenes = [];
     this.scene = null;
     
@@ -151,6 +145,9 @@ function SceneManager(p)
     // current scene draw() method
     this.draw = function()
     {
+        textFont("Georgia");
+        textAlign(CENTER);
+        cursor(ARROW);
         // take the current scene in a variable to protect it in case
         // it gets changed by the user code in the events such as setup()...
         var currScene = this.scene;
