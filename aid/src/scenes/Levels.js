@@ -1,4 +1,4 @@
-function LevelSelection() {
+function Levels() {
     this.draw = function() {
         stroke(255);
         strokeWeight(3);

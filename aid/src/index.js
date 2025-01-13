@@ -3,12 +3,10 @@ var canvas, images = {
 	storyline: [],
 	backgrounds: [],
 	characters: [],
-	entities: [],
-	CAPTAIN_ZERO_RATIO: 158 / 256, // ratio of captain zero's width to height
-	INFINITUS_RATIO: 112 / 256 // ratio of infinitus' height to width
+	entities: []
 };
-const DIMENSIONS = [960, 720];
-const INTRINSIC_MAIN_S = 720; // Side length of central content square before scaling
+const CAPTAIN_ZERO_RATIO = 158 / 256, INFINITUS_RATIO = 112 / 256;
+const INTRINSIC_W = 960, INTRINSIC_H = 720; // Dimensions of content before scaling
 const ASSET_PATH = 'images';
 
 const mgr = new SceneManager();
@@ -25,13 +23,11 @@ function preload() {
 		images.characters.push(loadImage(`${ASSET_PATH}/characters/${n}.png`)));
 	['FillerArrow', 'CannonArrow'].forEach(n =>
 		images.entities.push(loadImage(`${ASSET_PATH}/entities/${n}.png`)));
-	document.getElementById('p5_loading').remove();
 }
 
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
 	canvas.parent('body');
-	document.getElementsByTagName('body')[0].setAttribute('style', 'background-color: black');
 	
     mgr.wire();
     mgr.showScene(Menu);

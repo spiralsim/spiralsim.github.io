@@ -6,6 +6,8 @@
 var mouseCoordX, mouseCoordY; // The coordinates of the mouse mapped to the main square
 var pMouseIsPressed, mouseIsReleased; // mouseIsClicked stores whether the mouse was released in this frame
 
+const MAIN_MARGIN = 20; // Minimum margin between main content and canvas
+
 function SceneManager(p) {
     this.scenes = [];
     this.scene = null;
@@ -173,18 +175,20 @@ function SceneManager(p) {
         if (currScene.hasDraw) {
             const oScene = currScene.oScene;
             const bg = oScene.background;
-            if (bg instanceof Image) {
-                // Uses the minimum scale factor for the background that fills the canvas
-                const bgScaleFactor = max(width / bg.width, height / bg.height);
-                imageMode(CENTER);
-                image(bg, width / 2, height / 2, bg.width * bgScaleFactor, bg.height * bgScaleFactor);
-            } else background(bg ?? 192);
-            // Uses the maximum scale factor for the main content that fits on the canvas
-            const mainScaleFactor = min(width / INTRINSIC_MAIN_S, height / INTRINSIC_MAIN_S);
-            const scaledS = INTRINSIC_MAIN_S * mainScaleFactor;
+            // Uses the minimum scale factor for the background that fills the canvas
+            if (bg instanceof p5.Image) image(bg, 0, 0, width, height, 0, 0, bg.width, bg.height, COVER);
+            else background(bg ?? 192);
+            // Uses the maximum scale factor for the main content that fits on the canvas,
+            // leaving at least 
+            const mainScaleFactor = min(
+                (width - MAIN_MARGIN * 2) / INTRINSIC_W,
+                (height - MAIN_MARGIN * 2) / INTRINSIC_H
+            );
+            const scaledW = INTRINSIC_W * mainScaleFactor;
+            const scaledH = INTRINSIC_H * mainScaleFactor;
             // Top-left corner's coordinates
-            const extrinsicMainX = (width - scaledS) / 2;
-            const extrinsicMainY = (height - scaledS) / 2;
+            const extrinsicMainX = (width - scaledW) / 2;
+            const extrinsicMainY = (height - scaledH) / 2;
             mouseCoordX = (mouseX - extrinsicMainX) / mainScaleFactor;
             mouseCoordY = (mouseY - extrinsicMainY) / mainScaleFactor;
             push();
@@ -192,7 +196,7 @@ function SceneManager(p) {
             scale(mainScaleFactor);
             stroke(255, 0, 0);
             noFill();
-            rect(0, 0, INTRINSIC_MAIN_S, INTRINSIC_MAIN_S);
+            rect(0, 0, INTRINSIC_W, INTRINSIC_H);
             oScene.draw();
             if (oScene.buttons) oScene.buttons.forEach(b => b.run());
             pop();

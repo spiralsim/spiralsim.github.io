@@ -1,7 +1,17 @@
 class Rect {
-	constructor(x, y, w, h) {
-		this.x = x;
-		this.y = y;
+	/**
+	 * Internal coordinates are for always the top-left corner. The y alignment is always centered.
+	 * @param {Number} x 
+	 * @param {Number} y 
+	 * @param {Number} w 
+	 * @param {Number} h 
+	 * @param {string} alignX: One of 'LEFT', 'CENTER', or 'RIGHT'
+	 */
+	constructor(x, y, w, h, alignX) {
+		if (alignX == 'CENTER') this.x = x - w / 2;
+		else if (alignX == 'RIGHT') this.x = x - w;
+		else this.x = x;
+		this.y = y - h / 2;
 		this.w = w;
 		this.h = h;
 	}
@@ -16,10 +26,10 @@ class Rect {
 	}
 }
 
-const BUTTON_FADE_RATE = 20;
-function Button(txt, x, y, w, h, callback) {
+const BUTTON_FADE_RATE = 25;
+function Button(txt, x, y, w, h, callback, alignX) {
 	this.txt = txt;
-	this.rect = new Rect(x, y, w, h);
+	this.rect = new Rect(x, y, w, h, alignX);
 	this.callback = callback;
 	this.hover = false;
 	this.active = false;
@@ -46,12 +56,15 @@ function Button(txt, x, y, w, h, callback) {
 	};
 }
 
-const HOME_BUTTON_W = 160;
+const BOTTOM_BUTTONS_H = 60;
+const BOTTOM_BUTTONS_Y = INTRINSIC_H - BOTTOM_BUTTONS_H / 2;
+
 const homeButton = new Button(
 	"Main Menu",
-	INTRINSIC_MAIN_S / 2 - HOME_BUTTON_W / 2,
-	630,
-	HOME_BUTTON_W,
-	60,
-	() => { mgr.showScene(Menu); }
+	INTRINSIC_W / 2,
+	BOTTOM_BUTTONS_Y,
+	160,
+	BOTTOM_BUTTONS_H,
+	() => { mgr.showScene(Menu); },
+	'CENTER'
 );

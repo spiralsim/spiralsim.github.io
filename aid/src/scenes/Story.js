@@ -13,33 +13,34 @@ function Story() {
             rectMode(CENTER);
         } else {
             textAlign(LEFT, TOP);
+            imageMode(CORNER);
             textSize(18);
         }
         
         noStroke();
         switch (storyPage) {
             case 1:
-                text(`Our story begins with Milo's adventures in the Kingdom of Digitopolis, ruled by the Mathemagician and hidden away in the vast Lands Beyond...`, INTRINSIC_MAIN_S / 2, 240, INTRINSIC_MAIN_S);
+                text(`Our story begins with Milo's adventures in the Kingdom of Digitopolis, ruled by the Mathemagician and hidden away in the vast Lands Beyond...`, INTRINSIC_W / 2, 240, INTRINSIC_W);
                 textSize(24);
-                text(`Excerpted from "Childcraft: The How and Why Library", Volume 13 (©1985), p. 93–113`, INTRINSIC_MAIN_S / 2, 390, INTRINSIC_MAIN_S);
+                text(`Excerpted from "Childcraft: The How and Why Library", Volume 13 (©1985), p. 93–113`, INTRINSIC_W / 2, 390, INTRINSIC_W);
                 break;
             case 2:
                 text(`"Can you show me the biggest number there is?" asked Milo.
 
 "I'd be delighted," replied the Mathemagician, opening one of the closet doors. "We keep it right here. It took four miners just to dig it out."
 
-Inside was the biggest`, 0, 40, INTRINSIC_MAIN_S);
+Inside was the biggest`, 0, 40, INTRINSIC_W);
                 image(images.storyline[0], 0, 180, 318, 304);
-                text(`Milo had ever seen. It was fully twice as high as the Mathemagician.`, 0, 500, INTRINSIC_MAIN_S);
+                text(`Milo had ever seen. It was fully twice as high as the Mathemagician.`, 0, 500, INTRINSIC_W);
                 break;
             case 3:
                 text(`"No, that's not what I mean," objected Milo. "Can you show me the longest number there is?"
 
 "Surely," said the Mathemagician, opening another door. "Here it is. It took three carts to carry it here."
 
-Inside this closest was the longest`, 0, 40, INTRINSIC_MAIN_S);
+Inside this closest was the longest`, 0, 40, INTRINSIC_W);
                 image(images.storyline[1], 0, 200, 620, 320);
-                text(`imaginable. It was just about as wide as the three was high.`, 0, 520, INTRINSIC_MAIN_S);
+                text(`imaginable. It was just about as wide as the three was high.`, 0, 520, INTRINSIC_W);
                 break;
             case 4:
                 text(`"No, no, no, that's not what I mean either," he said, looking helplessly at Tock.
@@ -52,17 +53,17 @@ Inside this closest was the longest`, 0, 40, INTRINSIC_MAIN_S);
 
 "Just follow that line forever," said the Mathemagician, "and when you reach the end, turn left. There you'll find the land of Infinity, where the tallest, the shortest, the biggest, the smallest, and the most and the least of everything are kept.
 
-..."`, 0, 40, INTRINSIC_MAIN_S);
+..."`, 0, 40, INTRINSIC_W);
                 break;
             case 5:
-                text(`Milo bounded across the room and started up the stairs two at a time. "Wait for me, please," he shouted to Tock and the Humbug. "I'll be gone just a few minutes."`, 0, 40, INTRINSIC_MAIN_S - 216);
-                image(images.storyline[2], INTRINSIC_MAIN_S - 192, 40, 192, 544);
+                text(`Milo bounded across the room and started up the stairs two at a time. "Wait for me, please," he shouted to Tock and the Humbug. "I'll be gone just a few minutes."`, 0, 40, INTRINSIC_W - 216);
+                image(images.storyline[2], INTRINSIC_W - 192, 40, 192, 544);
                 break;
             case 6:
                 text(`Of course, Milo could never reach Infinity, for he is only a mortal.
 
-But you are no mere mortal. You are Captain Zero; it is your destiny to meet the immortal Infinitus.`, INTRINSIC_MAIN_S / 2, 180, INTRINSIC_MAIN_S);
-                image(images.characters[0], INTRINSIC_MAIN_S / 2, INTRINSIC_MAIN_S * 0.6, 180 * images.CAPTAIN_ZERO_RATIO, 180);
+But you are no mere mortal. You are Captain Zero; it is your destiny to meet the immortal Infinitus.`, INTRINSIC_W / 2, 180, INTRINSIC_W);
+                image(images.characters[0], INTRINSIC_W / 2, INTRINSIC_H * 0.6);
                 break;
             default:
                 mgr.showScene(Game);
@@ -75,26 +76,27 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
         new Button(
             '←',
             0,
-            630,
+            BOTTOM_BUTTONS_Y,
             60,
-            60,
+            BOTTOM_BUTTONS_H,
             () => { storyPage = max(storyPage - 1, 1); }
         ),
         new Button(
             '→',
             60,
-            630,
+            BOTTOM_BUTTONS_Y,
             60,
-            60,
+            BOTTOM_BUTTONS_H,
             () => { storyPage++; }
         ),
         new Button(
             'Skip to Game',
-            540,
-            630,
+            INTRINSIC_W,
+            BOTTOM_BUTTONS_Y,
             180,
-            60,
-            () => { storyPage = 7; }
+            BOTTOM_BUTTONS_H,
+            () => { storyPage = 7; },
+            'RIGHT'
         )
     ];
 }
