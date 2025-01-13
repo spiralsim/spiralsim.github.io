@@ -74,7 +74,7 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
         homeButton,
         new Button(
             '←',
-            390,
+            0,
             630,
             60,
             60,
@@ -82,7 +82,7 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
         ),
         new Button(
             '→',
-            450,
+            60,
             630,
             60,
             60,

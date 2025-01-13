@@ -46,11 +46,12 @@ function Button(txt, x, y, w, h, callback) {
 	};
 }
 
+const HOME_BUTTON_W = 160;
 const homeButton = new Button(
 	"Main Menu",
-	0,
+	INTRINSIC_MAIN_S / 2 - HOME_BUTTON_W / 2,
 	630,
-	160,
+	HOME_BUTTON_W,
 	60,
 	() => { mgr.showScene(Menu); }
 );
