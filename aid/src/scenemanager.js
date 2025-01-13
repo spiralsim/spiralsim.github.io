@@ -179,7 +179,7 @@ function SceneManager(p) {
             if (bg instanceof p5.Image) image(bg, 0, 0, width, height, 0, 0, bg.width, bg.height, COVER);
             else background(bg ?? 192);
             // Uses the maximum scale factor for the main content that fits on the canvas,
-            // leaving at least 
+            // leaving at least MAIN_MARGIN of space on each border
             const mainScaleFactor = min(
                 (width - MAIN_MARGIN * 2) / INTRINSIC_W,
                 (height - MAIN_MARGIN * 2) / INTRINSIC_H

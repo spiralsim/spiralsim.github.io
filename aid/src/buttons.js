@@ -65,6 +65,6 @@ const homeButton = new Button(
 	BOTTOM_BUTTONS_Y,
 	160,
 	BOTTOM_BUTTONS_H,
-	() => { mgr.showScene(Menu); },
+	() => { sceneManager.showScene(Menu); },
 	'CENTER'
 );

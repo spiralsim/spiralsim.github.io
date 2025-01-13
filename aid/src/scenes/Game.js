@@ -19,7 +19,7 @@ function Game() {
             240 + 120 * i,
             BUTTON_W,
             80,
-            () => { mgr.showScene(BUTTON_NEXT_SCENES[i]); }
+            () => { sceneManager.showScene(BUTTON_NEXT_SCENES[i]); }
         ));
     }
 }

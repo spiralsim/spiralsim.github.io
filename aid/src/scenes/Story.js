@@ -39,8 +39,8 @@ Inside was the biggest`, 0, 40, INTRINSIC_W);
 "Surely," said the Mathemagician, opening another door. "Here it is. It took three carts to carry it here."
 
 Inside this closest was the longest`, 0, 40, INTRINSIC_W);
-                image(images.storyline[1], 0, 200, 620, 320);
-                text(`imaginable. It was just about as wide as the three was high.`, 0, 520, INTRINSIC_W);
+                image(images.storyline[1], 0, 150, 620, 320);
+                text(`imaginable. It was just about as wide as the three was high.`, 0, 470, INTRINSIC_W);
                 break;
             case 4:
                 text(`"No, no, no, that's not what I mean either," he said, looking helplessly at Tock.
@@ -66,7 +66,7 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
                 image(images.characters[0], INTRINSIC_W / 2, INTRINSIC_H * 0.6);
                 break;
             default:
-                mgr.showScene(Game);
+                sceneManager.showScene(Game);
         }
         rectMode(CORNER);
     };

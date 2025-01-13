@@ -21,7 +21,7 @@ function Menu() {
             INTRINSIC_H * (0.4 + 0.2 * i),
             INTRINSIC_W * 3 / 4,
             INTRINSIC_H * 0.15,
-            () => { mgr.showScene(BUTTON_NEXT_SCENES[i]); },
+            () => { sceneManager.showScene(BUTTON_NEXT_SCENES[i]); },
             'CENTER'
         ));
     }
