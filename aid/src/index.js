@@ -8,7 +8,39 @@ var canvas, images = {
 	INFINITUS_RATIO: 112 / 256 // ratio of infinitus' height to width
 };
 const DIMENSIONS = [960, 720];
+const INTRINSIC_CENTER_S = 720; // Side length of central content square before scaling
 const ASSET_PATH = 'images';
+
+function Button(txt, x, y, w, h, onClick) {
+	this.txt = txt;
+	this.x = x;
+	this.y = y;
+	this.w = w;
+	this.h = h;
+	this.onClick = onClick;
+	this.hover = false;
+	this.active = false;
+	this.fade = 255;
+
+	this.run = function () {
+		stroke(0);
+		strokeWeight(4);
+		fill(this.fade);
+		rect(this.x, this.y, this.w, this.h, 5);
+		fill(255 - this.fade);
+		textAlign(CENTER, CENTER);
+		noStroke();
+		textSize(24);
+		text(this.txt, this.x + this.w / 2, this.y + this.h / 2);
+		
+		this.active = true;
+		if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
+			this.fade = max(this.fade - 20, 0);
+			cursor(HAND);
+			this.hover = true;
+		}
+	};
+}
 
 /**
  * Loads images

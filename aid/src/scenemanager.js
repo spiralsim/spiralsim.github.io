@@ -171,11 +171,21 @@ function SceneManager(p) {
             const bg = currScene.oScene.bgImage;
             if (bg) {
                 // Uses the minimum scale factor for the bgImage that fills the canvas
-                const scaleFactor = max(width / bg.width, height / bg.height);
+                const bgScaleFactor = max(width / bg.width, height / bg.height);
                 imageMode(CENTER);
-                image(bg, width / 2, height / 2, bg.width * scaleFactor, bg.height * scaleFactor);
+                image(bg, width / 2, height / 2, bg.width * bgScaleFactor, bg.height * bgScaleFactor);
             }
+            // Uses the maximum scale factor for the central content that fits on the canvas
+            const centerScaleFactor = min(width / INTRINSIC_CENTER_S, height / INTRINSIC_CENTER_S);
+            const scaledS = INTRINSIC_CENTER_S * centerScaleFactor;
+            push();
+            translate((width - scaledS) / 2, (height - scaledS) / 2);
+            scale(centerScaleFactor);
             currScene.oScene.draw();
+            stroke(255, 0, 0);
+            noFill();
+            rect(0, 0, INTRINSIC_CENTER_S, INTRINSIC_CENTER_S);
+            pop();
         }
     }
 
