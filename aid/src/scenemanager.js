@@ -167,8 +167,14 @@ function SceneManager(p) {
             currScene.enterExecuted = true;
         }
 
-        if ( currScene.hasDraw )
-        {
+        if (currScene.hasDraw) {
+            const bg = currScene.oScene.bgImage;
+            if (bg) {
+                // Uses the minimum scale factor for the bgImage that fills the canvas
+                const scaleFactor = max(width / bg.width, height / bg.height);
+                imageMode(CENTER);
+                image(bg, width / 2, height / 2, bg.width * scaleFactor, bg.height * scaleFactor);
+            }
             currScene.oScene.draw();
         }
     }
