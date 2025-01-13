@@ -1,7 +1,5 @@
-function About() {
-    this.draw = function() {
-        noStroke();
-        fill(0);
+class About extends Depth1Scene {
+    draw() {
         textSize(60);
         text("About", INTRINSIC_W / 2, 80);
         textSize(30);
@@ -11,7 +9,5 @@ function About() {
 Included in the source code of this game are my intended solutions.
 
 All level background images are freely available. You can find links to them in the source code.`, 0, 100, INTRINSIC_W);
-    };
-
-    this.buttons = [homeButton];
+    }
 }

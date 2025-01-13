@@ -621,8 +621,8 @@ Finally, press [Fill] to begin filling. When filling, you need to select two blo
 				text(errMsg || okMsg || "Enter an expression. For the √ operator, type √(x) instead of √x.", 730, 455, 220);
 			}
 			// Buttons
-			homeButton.x = 760;
-			homeButton.run();
+			DEPTH_1_HOME_BUTTON.x = 760;
+			DEPTH_1_HOME_BUTTON.run();
 			// restartButton.run();
 			break;
 

@@ -1,12 +1,39 @@
-function Story() {
-    var storyPage = 1;
+class Story extends Depth1Scene {
+    static page = 1;
 
-    this.background = 'white';
+    constructor() {
+        super();
+        this.buttons.push(new Button(
+            '←',
+            0,
+            BOTTOM_BUTTONS_Y,
+            60,
+            BOTTOM_BUTTONS_H,
+            () => { Story.page = max(Story.page - 1, 1); }
+        ));
+        this.buttons.push(new Button(
+            '→',
+            60,
+            BOTTOM_BUTTONS_Y,
+            60,
+            BOTTOM_BUTTONS_H,
+            () => { Story.page++; }
+        ));
+        this.buttons.push(new Button(
+            'Skip to Game',
+            INTRINSIC_W,
+            BOTTOM_BUTTONS_Y,
+            180,
+            BOTTOM_BUTTONS_H,
+            () => { Story.page = 7; },
+            'RIGHT'
+        ));
+    }
 
-    this.draw = function() {
+    draw() {
         fill(0);
         textSize(30);
-        if ([1, 6].includes(storyPage)) {
+        if ([1, 6].includes(Story.page)) {
             textStyle(ITALIC);
             textAlign(CENTER, CENTER);
             textSize(36);
@@ -17,9 +44,9 @@ function Story() {
             imageMode(CORNER);
             textSize(18);
         }
-        
+
         noStroke();
-        switch (storyPage) {
+        switch (Story.page) {
             case 1:
                 text(`Our story begins with Milo's adventures in the Kingdom of Digitopolis, ruled by the Mathemagician and hidden away in the vast Lands Beyond...`, INTRINSIC_W / 2, 240, INTRINSIC_W);
                 textSize(24);
@@ -70,34 +97,5 @@ But you are no mere mortal. You are Captain Zero; it is your destiny to meet the
                 sceneManager.showScene(Game);
         }
         rectMode(CORNER);
-    };
-
-    this.buttons = [
-        homeButton,
-        new Button(
-            '←',
-            0,
-            BOTTOM_BUTTONS_Y,
-            60,
-            BOTTOM_BUTTONS_H,
-            () => { storyPage = max(storyPage - 1, 1); }
-        ),
-        new Button(
-            '→',
-            60,
-            BOTTOM_BUTTONS_Y,
-            60,
-            BOTTOM_BUTTONS_H,
-            () => { storyPage++; }
-        ),
-        new Button(
-            'Skip to Game',
-            INTRINSIC_W,
-            BOTTOM_BUTTONS_Y,
-            180,
-            BOTTOM_BUTTONS_H,
-            () => { storyPage = 7; },
-            'RIGHT'
-        )
-    ];
+    }
 }

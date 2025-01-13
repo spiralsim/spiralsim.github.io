@@ -58,12 +58,18 @@ class Button {
 const BOTTOM_BUTTONS_H = 60;
 const BOTTOM_BUTTONS_Y = INTRINSIC_H - BOTTOM_BUTTONS_H / 2;
 
-const homeButton = new Button(
-	"Main Menu",
-	INTRINSIC_W / 2,
-	BOTTOM_BUTTONS_Y,
-	160,
-	BOTTOM_BUTTONS_H,
-	() => { sceneManager.showScene(Menu); },
-	'CENTER'
-);
+class HomeButton extends Button {
+	constructor(isInGame) {
+		super(
+			'Home',
+			isInGame ? INTRINSIC_W - 120 : INTRINSIC_W / 2,
+			BOTTOM_BUTTONS_Y,
+			isInGame ? 240 : 100,
+			BOTTOM_BUTTONS_H,
+			() => { sceneManager.showScene(Home); },
+			'CENTER'
+		);
+	}
+}
+
+const DEPTH_1_HOME_BUTTON = new HomeButton(false);

@@ -150,9 +150,6 @@ function SceneManager(p) {
     // current scene draw() method
     this.draw = function()
     {
-        textFont("Georgia");
-        textAlign(CENTER);
-        cursor(ARROW);
         // take the current scene in a variable to protect it in case
         // it gets changed by the user code in the events such as setup()...
         var currScene = this.scene;
@@ -176,8 +173,13 @@ function SceneManager(p) {
             const oScene = currScene.oScene;
             const bg = oScene.background;
             // Uses the minimum scale factor for the background that fills the canvas
-            if (bg instanceof p5.Image) image(bg, 0, 0, width, height, 0, 0, bg.width, bg.height, COVER);
-            else background(bg ?? 192);
+            background('white');
+            if (bg instanceof p5.Image) {
+                tint(255, 64);
+                image(bg, 0, 0, width, height, 0, 0, bg.width, bg.height, COVER);
+                noTint();
+            }
+            // else background(bg ?? 192);
             // Uses the maximum scale factor for the main content that fits on the canvas,
             // leaving at least MAIN_MARGIN of space on each border
             const mainScaleFactor = min(
@@ -197,6 +199,11 @@ function SceneManager(p) {
             stroke(255, 0, 0);
             noFill();
             rect(0, 0, INTRINSIC_W, INTRINSIC_H);
+            textFont("Georgia");
+            textAlign(CENTER);
+            cursor(ARROW);
+            fill(0);
+            noStroke();
             oScene.draw();
             if (oScene.buttons) oScene.buttons.forEach(b => b.run());
             pop();
