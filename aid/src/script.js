@@ -1,47 +1,4 @@
-function Button(txt, x, y, w, h, onClick) {
-	this.txt = txt;
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-	this.onClick = onClick;
-	this.hover = false;
-	this.active = false;
-	this.fade = 255;
 
-	this.run = function () {
-		stroke(0);
-		strokeWeight(4);
-		fill(this.fade);
-		rect(this.x, this.y, this.w, this.h, 5);
-		fill(255 - this.fade);
-		textAlign(CENTER, CENTER);
-		noStroke();
-		textSize(24);
-		text(this.txt, this.x + this.w / 2, this.y + this.h / 2);
-		
-		this.active = true;
-		if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
-			this.fade = max(this.fade - 20, 0);
-			cursor(HAND);
-			this.hover = true;
-		}
-	};
-}
-var buttons = [];
-for (let i = 0; i < 3; i++) {
-	buttons.push(new Button(
-		["Start", "About", "Credits"][i],
-		300,
-		300 + 120 * i,
-		360,
-		90,
-		() => {
-			page = ["Story", "About", "Credits"][i];
-			fadeTo = null;
-		}
-	));
-}
 homeButton = new Button(
 	"Main Menu",
 	420,
@@ -478,32 +435,7 @@ if (false) { //devmode
 // End scene
 var ringX = 360, CZy, gameFade = 255, toolbarImg, infinitusFade = 0, fightPos = 240, explosionSize = 0, finishedAnim = false, endFade = 0;
 function draw () {
-	if (!loaded) {
-		document.getElementById("loading-message").innerHTML = '';
-		loaded = true;
-	}
-	buttons.forEach(b => {
-		b.active = false;
-		if (!b.hover) b.fade = min(b.fade + 20, 255);
-		b.hover = false;
-	});
-	textFont("Georgia");
-	textAlign(CENTER);
-	cursor(ARROW);
-
 	switch (page) {
-		case "Home":
-			image(images.openingScene, 0, 0);
-			stroke(255);
-			strokeWeight(3);
-			fill(0);
-			textSize(60);
-			text("Adventures in Digitopolis", 480, 100);
-			textSize(30);
-			text("A tale of Captain Zero and Infinitus", 480, 160);
-			buttons[0].run();
-			break;
-
 		case "Story":
 			background(storyPage >= 5 ? color(210, 209, 204) : 255);
 			fill(0);

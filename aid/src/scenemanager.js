@@ -172,13 +172,13 @@ function SceneManager(p) {
 
         if (currScene.hasDraw) {
             const oScene = currScene.oScene;
-            const bg = oScene.bgImage;
-            if (bg) {
-                // Uses the minimum scale factor for the bgImage that fills the canvas
+            const bg = oScene.background;
+            if (bg instanceof Image) {
+                // Uses the minimum scale factor for the background that fills the canvas
                 const bgScaleFactor = max(width / bg.width, height / bg.height);
                 imageMode(CENTER);
                 image(bg, width / 2, height / 2, bg.width * bgScaleFactor, bg.height * bgScaleFactor);
-            }
+            } else background(bg ?? 192);
             // Uses the maximum scale factor for the main content that fits on the canvas
             const mainScaleFactor = min(width / INTRINSIC_MAIN_S, height / INTRINSIC_MAIN_S);
             const scaledS = INTRINSIC_MAIN_S * mainScaleFactor;
@@ -190,11 +190,11 @@ function SceneManager(p) {
             push();
             translate(extrinsicMainX, extrinsicMainY);
             scale(mainScaleFactor);
-            oScene.draw();
-            if (oScene.buttons) oScene.buttons.forEach(b => b.run());
             stroke(255, 0, 0);
             noFill();
             rect(0, 0, INTRINSIC_MAIN_S, INTRINSIC_MAIN_S);
+            oScene.draw();
+            if (oScene.buttons) oScene.buttons.forEach(b => b.run());
             pop();
         }
 

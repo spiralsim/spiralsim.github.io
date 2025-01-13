@@ -1,5 +1,5 @@
 function Menu() {
-    this.bgImage = images.openingScene;
+    this.background = images.openingScene;
 
     this.draw = function() {
         stroke(255);
@@ -9,7 +9,6 @@ function Menu() {
         text("Adventures in Digitopolis", INTRINSIC_MAIN_S / 2, 100);
         textSize(30);
         text("A tale of Captain Zero and Infinitus", INTRINSIC_MAIN_S / 2, 160);
-        // buttons[0].run();
     };
     
     const BUTTON_LABELS = ['Story Mode', 'Freeplay Mode', 'About'];
@@ -23,7 +22,7 @@ function Menu() {
             240 + 120 * i,
             BUTTON_W,
             80,
-            () => { this.sceneManager.showScene(BUTTON_NEXT_SCENES[i]); }
+            () => { mgr.showScene(BUTTON_NEXT_SCENES[i]); }
         ));
     }
 }
