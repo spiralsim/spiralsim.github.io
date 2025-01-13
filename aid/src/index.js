@@ -8,16 +8,32 @@ var canvas, images = {
 	INFINITUS_RATIO: 112 / 256 // ratio of infinitus' height to width
 };
 const DIMENSIONS = [960, 720];
-const INTRINSIC_CENTER_S = 720; // Side length of central content square before scaling
+const INTRINSIC_MAIN_S = 720; // Side length of central content square before scaling
 const ASSET_PATH = 'images';
 
-function Button(txt, x, y, w, h, onClick) {
+class Rect {
+	constructor(x, y, w, h) {
+		this.x = x;
+		this.y = y;
+		this.w = w;
+		this.h = h;
+	}
+
+	get collideMouseCoord() {
+		return (
+			mouseCoordX > this.x &&
+			mouseCoordX < this.x + this.w &&
+			mouseCoordY > this.y &&
+			mouseCoordY < this.y + this.h
+		);
+	}
+}
+
+const BUTTON_FADE_RATE = 20;
+function Button(txt, x, y, w, h, callback) {
 	this.txt = txt;
-	this.x = x;
-	this.y = y;
-	this.w = w;
-	this.h = h;
-	this.onClick = onClick;
+	this.rect = new Rect(x, y, w, h);
+	this.callback = callback;
 	this.hover = false;
 	this.active = false;
 	this.fade = 255;
@@ -26,19 +42,19 @@ function Button(txt, x, y, w, h, onClick) {
 		stroke(0);
 		strokeWeight(4);
 		fill(this.fade);
-		rect(this.x, this.y, this.w, this.h, 5);
+		rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h, 5);
 		fill(255 - this.fade);
 		textAlign(CENTER, CENTER);
 		noStroke();
 		textSize(24);
-		text(this.txt, this.x + this.w / 2, this.y + this.h / 2);
+		text(this.txt, this.rect.x + this.rect.w / 2, this.rect.y + this.rect.h / 2);
 		
 		this.active = true;
-		if (mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h) {
-			this.fade = max(this.fade - 20, 0);
+		if (this.rect.collideMouseCoord) {
+			this.fade = max(this.fade - BUTTON_FADE_RATE, 0);
 			cursor(HAND);
-			this.hover = true;
-		}
+			if (mouseIsReleased) this.callback();
+		} else this.fade = min(this.fade + BUTTON_FADE_RATE, 255);
 	};
 }
 

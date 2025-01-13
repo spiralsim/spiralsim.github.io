@@ -3,6 +3,9 @@
 // https://github.com/mveteanu/p5.SceneManager
 // 
 
+var mouseCoordX, mouseCoordY; // The coordinates of the mouse mapped to the main square
+var pMouseIsPressed, mouseIsReleased; // mouseIsClicked stores whether the mouse was released in this frame
+
 function SceneManager(p) {
     this.scenes = [];
     this.scene = null;
@@ -168,27 +171,36 @@ function SceneManager(p) {
         }
 
         if (currScene.hasDraw) {
-            const bg = currScene.oScene.bgImage;
+            const oScene = currScene.oScene;
+            const bg = oScene.bgImage;
             if (bg) {
                 // Uses the minimum scale factor for the bgImage that fills the canvas
                 const bgScaleFactor = max(width / bg.width, height / bg.height);
                 imageMode(CENTER);
                 image(bg, width / 2, height / 2, bg.width * bgScaleFactor, bg.height * bgScaleFactor);
             }
-            // Uses the maximum scale factor for the central content that fits on the canvas
-            const centerScaleFactor = min(width / INTRINSIC_CENTER_S, height / INTRINSIC_CENTER_S);
-            const scaledS = INTRINSIC_CENTER_S * centerScaleFactor;
+            // Uses the maximum scale factor for the main content that fits on the canvas
+            const mainScaleFactor = min(width / INTRINSIC_MAIN_S, height / INTRINSIC_MAIN_S);
+            const scaledS = INTRINSIC_MAIN_S * mainScaleFactor;
+            // Top-left corner's coordinates
+            const extrinsicMainX = (width - scaledS) / 2;
+            const extrinsicMainY = (height - scaledS) / 2;
+            mouseCoordX = (mouseX - extrinsicMainX) / mainScaleFactor;
+            mouseCoordY = (mouseY - extrinsicMainY) / mainScaleFactor;
             push();
-            translate((width - scaledS) / 2, (height - scaledS) / 2);
-            scale(centerScaleFactor);
-            currScene.oScene.draw();
+            translate(extrinsicMainX, extrinsicMainY);
+            scale(mainScaleFactor);
+            oScene.draw();
+            if (oScene.buttons) oScene.buttons.forEach(b => b.run());
             stroke(255, 0, 0);
             noFill();
-            rect(0, 0, INTRINSIC_CENTER_S, INTRINSIC_CENTER_S);
+            rect(0, 0, INTRINSIC_MAIN_S, INTRINSIC_MAIN_S);
             pop();
         }
-    }
 
+        mouseIsReleased = !mouseIsPressed && pMouseIsPressed;
+        pMouseIsPressed = mouseIsPressed;
+    }
 
     // Handle a certain event for a scene... 
     // It is used by the anonymous functions from the wire() function
