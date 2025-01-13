@@ -1,8 +1,9 @@
 function Story() {
     var storyPage = 1;
 
+    this.background = 'white';
+
     this.draw = function() {
-        this.background = storyPage >= 5 ? 192 : 255;
         fill(0);
         textSize(30);
         if ([1, 6].includes(storyPage)) {

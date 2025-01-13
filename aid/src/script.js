@@ -22,13 +22,6 @@ restartButton = new Button(
 		fadeTo = "Game";
 	}
 );
-buttons.push(restartButton);
-function mouseReleased () {
-	buttons.forEach(b => {
-		if (b.hover && b.active) b.onClick();
-	});
-	clicking = true;
-}
 
 function Entity (x, y, w, h) {
 	this.pos = createVector(x, y);
@@ -377,8 +370,6 @@ function scaleRing (x, y, sz, _scale) {
 
 // General transitions
 var loaded = false, page, fadeIn = 0, fadeTo = "Home", clicking = false; // If fadeTo != page and fadeTo is not null, the program will make a fade transition to fadeTo
-// Storyline
-var storyPage = 1;
 // Game
 var level = 0, nextLevel = true;
 var tileSize = 30, playerSize = tileSize * 0.8, reloadTime = 60, entities = [], player;
@@ -468,11 +459,8 @@ Finally, press [Fill] to begin filling. When filling, you need to select two blo
 			fill(192);
 			rect(720, 0, 240, 720);
 			fill(0);
-			textSize(30);
 			textAlign(CENTER, TOP);
-			text("Adventures in\nDigitopolis", 840, 10);
 			textSize(18);
-			text("Level " + level, 840, 90);
 			// Numbers and Operators
 			strokeWeight(2);
 			for (let n = 0; n < 2; n++) {

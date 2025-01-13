@@ -27,15 +27,15 @@ class Rect {
 }
 
 const BUTTON_FADE_RATE = 25;
-function Button(txt, x, y, w, h, callback, alignX) {
-	this.txt = txt;
-	this.rect = new Rect(x, y, w, h, alignX);
-	this.callback = callback;
-	this.hover = false;
-	this.active = false;
-	this.fade = 255;
+class Button {
+	constructor(txt, x, y, w, h, callback, alignX) {
+		this.txt = txt;
+		this.rect = new Rect(x, y, w, h, alignX);
+		this.callback = callback;
+		this.fade = 255;
+	}
 
-	this.run = function () {
+	run() {
 		stroke(0);
 		strokeWeight(4);
 		fill(this.fade);
@@ -46,14 +46,13 @@ function Button(txt, x, y, w, h, callback, alignX) {
 		textSize(24);
 		textStyle(NORMAL);
 		text(this.txt, this.rect.x + this.rect.w / 2, this.rect.y + this.rect.h / 2);
-		
-		this.active = true;
+
 		if (this.rect.collideMouseCoord) {
 			this.fade = max(this.fade - BUTTON_FADE_RATE, 0);
 			cursor(HAND);
 			if (mouseIsReleased) this.callback();
 		} else this.fade = min(this.fade + BUTTON_FADE_RATE, 255);
-	};
+	}
 }
 
 const BOTTOM_BUTTONS_H = 60;
