@@ -1,22 +1,21 @@
 function Game() {
+    class Entity {
+        constructor(x, y, w, h) {
+            this.pos = createVector(x, y);
+            this.w = w;
+            this.h = h;
+            this.center = createVector(this.pos.x + this.w / 2, this.pos.y + this.h / 2);
+            this.deleteMe = false;
 
-    function Entity (x, y, w, h) {
-        this.pos = createVector(x, y);
-        this.w = w;
-        this.h = h;
-        this.center = createVector(this.pos.x + this.w / 2, this.pos.y + this.h / 2);
-        this.deleteMe = false;
+            this.draw = this.onCollision = this.update = () => { };
+        }
 
-        this.draw = this.onCollision = this.update = () => {};
-        this.checkCollision = function ({
-            pos: {x: x, y: y},
-            w: w,
-            h: h
-        }) {
+        checkCollision({pos: { x: x, y: y }, w: w, h: h}) {
             return !(this.pos.x + this.w <= x || this.pos.x >= x + w || this.pos.y + this.h <= y || this.pos.y >= y + h);
-        };
+        }
+
         // Push back the player so that it is no longer intersecting this entity
-        this.pushPlayer = function () {
+        pushPlayer() {
             if (player.vel.x < 0 && player.pos.x + player.w > this.pos.x + this.w) {
                 player.vel.x = 0;
                 player.pos.x = this.pos.x + this.w;
@@ -35,36 +34,40 @@ function Game() {
                 player.jumping = true;
                 player.pos.y = this.pos.y + this.h;
             }
-        };
-        this.run = function () {
+        }
+
+        run() {
             this.update();
             this.draw();
             if (this.checkCollision(player)) this.onCollision();
-        };
+        }
     }
-    function Player () {
-        Entity.call(this, 0, 0, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
-        this.spawnPos = spawnPos.copy();
-        this.spawnPos.x += (tileSize - this.w) / 2;
+    class Player extends Entity {
+        constructor() {
+            super(0, 0, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+            this.spawnPos = spawnPos.copy();
+            this.spawnPos.x += (tileSize - this.w) / 2;
+            this.spawn();
+        }
 
-        this.draw = function () {
+        draw() {
             image(images.characters[0], this.pos.x, this.pos.y, this.w, this.h);
-        };
-        this.update = function () {
+        }
+        update() {
             this.move();
-        };
-        this.move = function () {
+        }
+        move() {
             this.prevPos = this.pos.copy();
             this.pos.add(this.vel);
             // If the player is directly on top of a block, they are not jumping
             entities.forEach(e => {
                 if ((e instanceof Block || e instanceof Cannon) && this.pos.x + this.w > e.pos.x && this.pos.x < e.pos.x + e.w && this.pos.y + this.h == e.pos.y) this.jumping = false;
             });
-        };
-        this.freeze = function () {
+        }
+        freeze() {
             this.vel = createVector();
-        };
-        this.spawn = function () {
+        }
+        spawn() {
             this.pos = this.spawnPos.copy();
             this.prevPos = this.spawnPos.copy();
             this.vel = createVector();
@@ -72,16 +75,16 @@ function Game() {
             entities.forEach(e => {
                 if (e instanceof Cannon) e.bullets = [];
             });
-        };
-
-        this.spawn();
+        }
     }
-    function Block (x, y, w, h, userMade) {
-        Entity.call(this, x, y, w, h);
-        this.selected = false;
-        this.userMade = userMade;
-        
-        this.draw = function () {
+    class Block extends Entity {
+        constructor(x, y, w, h, userMade) {
+            super(x, y, w, h);
+            this.selected = false;
+            this.userMade = userMade;
+        }
+
+        draw() {
             fill.apply(null, LEVELS[level - 1].blockCol);
             if (this.selected) fill(128 * (1 + sin(frameCount / 10)), 128 * (1 + sin(frameCount / 10)), 255);
             noStroke();
@@ -92,76 +95,86 @@ function Game() {
                 for (let x = this.pos.x; x <= this.pos.x + this.w; x += 15) line(x, this.pos.y, x, this.pos.y + this.h);
                 for (let y = this.pos.y; y <= this.pos.y + this.h; y += 15) line(this.pos.x, y, this.pos.x + this.w, y);
             }
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             this.pushPlayer();
-        };
+        }
     }
-    function Spawn (x, y) {
-        Entity.call(this, x, y, tileSize, tileSize);
-        spawnPos = this.pos;
-        
-        this.draw = function () {
+    class Spawn extends Entity {
+        constructor(x, y) {
+            super(x, y, tileSize, tileSize);
+            spawnPos = this.pos;
+        }
+
+        draw() {
             fill(255, 0, 255);
             noStroke();
             rect(this.pos.x, this.pos.y, this.w, this.h);
-        };
+        }
     }
-    function Finish (x, y, w, h) {
-        Entity.call(this, x, y, w, h);
-        
-        this.draw = function () {
+    class Finish extends Entity {
+        constructor(x, y, w, h) {
+            super(x, y, w, h);
+        }
+
+        draw() {
             fill(0, 255, 255);
             noStroke();
             rect(this.pos.x, this.pos.y, this.w, this.h);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             nextLevel = true;
-        };
+        }
     }
-    function Lava (x, y, w, h) {
-        Entity.call(this, x, y, w, h);
-        
-        this.draw = function () {
+    class Lava extends Entity {
+        constructor(x, y, w, h) {
+            super(x, y, w, h);
+        }
+
+        draw() {
             fill(192 + 64 * sin(frameCount / 10), 0, 0);
             noStroke();
             rect(this.pos.x, this.pos.y, this.w, this.h);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             player.spawn();
-        };
+        }
     }
-    function Trampoline (x, y, w, h) {
-        Entity.call(this, x, y, w, h);
+    class Trampoline extends Entity {
+        constructor(x, y, w, h) {
+            super(x, y, w, h);
+        }
         
-        this.draw = function () {
+        draw() {
             fill(0, 255, 0);
             noStroke();
             rect(this.pos.x, this.pos.y, this.w, this.h);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             if (player.vel.y > 0) player.vel.y = max(player.vel.y * -1.2, -9);
             player.jumping = true;
             this.pushPlayer();
-        };
+        }
     }
-    function Text (txt, x, y, w) {
-        textSize(15);
-        Entity.call(this, x, y, w || textWidth(txt), 15);
-        this.txt = txt;
-        this.textW = w;
-        
-        this.draw = function () {
+    class Text extends Entity {
+        constructor(txt, x, y, w) {
+            super(x, y, w || textWidth(txt), 15);
+            textSize(15);
+            this.txt = txt;
+            this.textW = w;
+        }
+
+        draw() {
             fill.apply(null, LEVELS[level - 1].textCol);
             textSize(15);
             textAlign(CENTER, TOP);
             text(this.txt, this.pos.x - (this.textW ? this.w / 2 : 0), this.pos.y, this.textW);
-        };
+        }
     }
     const fillNull = (arr, val) => {
         arr[arr.indexOf(null)] = val;
     };
-    function drawNumber (name, pos, w, h, defColor) {
+    function drawNumber(name, pos, w, h, defColor) {
         fill(255, 192);
         noStroke();
         circle(pos.x + w / 2, pos.y + h / 2, w);
@@ -174,20 +187,22 @@ function Game() {
         text(name, pos.x + w / 2, pos.y + h / 2);
         colorMode(RGB);
     }
-    function _Number (x, y, name) {
-        Entity.call(this, x, y, tileSize, tileSize);
-        this.name = name;
-        
-        this.draw = function () {
+    class _Number extends Entity {
+        constructor(x, y, name) {
+            super(x, y, tileSize, tileSize);
+            this.name = name;
+        }
+
+        draw() {
             drawNumber(this.name, this.pos, this.w, this.h, 255);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             fillNull(numbers, this.name);
             alreadyFound.push([this.pos, level]);
             this.deleteMe = true;
-        };
+        }
     }
-    function drawOperator (name, pos, w, h) {
+    function drawOperator(name, pos, w, h) {
         fill(255, 192);
         noStroke();
         circle(pos.x + w / 2, pos.y + h / 2, w);
@@ -197,20 +212,22 @@ function Game() {
         noStroke();
         text(name, pos.x + w / 2, pos.y + h / 2);
     }
-    function Operator (x, y, name) {
-        Entity.call(this, x, y, tileSize, tileSize);
-        this.name = name;
-        
-        this.draw = function () {
+    class Operator extends Entity {
+        constructor(x, y, name) {
+            super(x, y, tileSize, tileSize);
+            this.name = name;
+        }
+
+        draw() {
             drawOperator(this.name, this.pos, this.w, this.h);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             fillNull(operators, this.name);
             alreadyFound.push([this.pos, level]);
             this.deleteMe = true;
-        };
+        }
     }
-    function drawMachine (pos, w, h) {
+    function drawMachine(pos, w, h) {
         strokeWeight(1);
         push();
         translate(pos.x + w / 2, pos.y + h / 2);
@@ -236,28 +253,32 @@ function Game() {
         rectMode(CORNER);
         pop();
     }
-    function Machine (x, y) {
-        Entity.call(this, x, y, tileSize, tileSize);
-        
-        this.draw = function () {
-            drawMachine(this.pos, this.w, this.h)
-        };
-        this.onCollision = function () {
+    class Machine extends Entity {
+        constructor(x, y) {
+            super(x, y, tileSize, tileSize);
+        }
+
+        draw() {
+            drawMachine(this.pos, this.w, this.h);
+        }
+        onCollision() {
             hasMachine = true;
             alreadyFound.push([this.pos, level]);
             showExplanation = true;
             toolbarImg = get(720, 0, 240, 960);
             this.deleteMe = true;
-        };
+        }
     }
-    function Cannon (x, y) {
-        Entity.call(this, x, y, tileSize, tileSize);
-        this.bullets = [];
-        this.pointing = createVector(1, 0);
-        this.inRange = false;
-        this.reload = 0;
-        
-        this.draw = function () {
+    class Cannon extends Entity {
+        constructor(x, y) {
+            Entity.call(this, x, y, tileSize, tileSize);
+            this.bullets = [];
+            this.pointing = createVector(1, 0);
+            this.inRange = false;
+            this.reload = 0;
+        }
+
+        draw() {
             noStroke();
             fill(this.inRange ? color(255, 255, this.reload / reloadTime * 255) : 192);
             rect(this.pos.x, this.pos.y, this.w, this.h);
@@ -274,8 +295,8 @@ function Game() {
                 strokeWeight(1);
                 ellipse(b.pos.x, b.pos.y, 6, 6);
             });
-        };
-        this.update = function () {
+        }
+        update() {
             // Random seeding makes cannons fire in staggered intervals
             if (this.pos.dist(player.pos) < tileSize * 20) {
                 if (random() < 0.05) this.inRange = true;
@@ -308,12 +329,12 @@ function Game() {
                 if (b.pos.x < 0 || b.pos.x > 720 || b.pos.y < 0 || b.pos.y > 720) b.deleteMe = true;
             });
             this.bullets = this.bullets.filter(b => !b.deleteMe);
-        };
-        this.onCollision = function () {
+        }
+        onCollision() {
             this.pushPlayer();
-        };
+        }
     }
-    function generateLevel () {
+    function generateLevel() {
         entities = [];
         LEVELS[level - 1].entities.forEach(entity => {
             const newEntity = eval(`new ${entity[0]}(${JSON.stringify(entity.slice(1)).replace(/\[|\]/g, '')})`);
@@ -333,7 +354,7 @@ function Game() {
         entities.push(player);
         playerScale = level;
     }
-    function scaleRing (x, y, sz, _scale) {
+    function scaleRing(x, y, sz, _scale) {
         stroke(255, 64);
         noFill();
         strokeWeight(sz / 20);
