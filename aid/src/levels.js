@@ -1,4 +1,4 @@
-[
+const LEVELS_DATA = [
 	{
 		"number": 1,
 		"entities": [
@@ -229,4 +229,4 @@
 			"e^(i*π)+9=[8]"
 		]
 	}
-]
+];

@@ -57,14 +57,15 @@ class Button {
 
 const BOTTOM_BUTTONS_H = 60;
 const BOTTOM_BUTTONS_Y = INTRINSIC_H - BOTTOM_BUTTONS_H / 2;
+const IN_GAME_BUTTON_W = 160;
 
 class HomeButton extends Button {
 	constructor(isInGame) {
 		super(
 			'Home',
 			isInGame ? INTRINSIC_W - 120 : INTRINSIC_W / 2,
-			BOTTOM_BUTTONS_Y,
-			isInGame ? 240 : 100,
+			isInGame ? BOTTOM_BUTTONS_Y - 80 : BOTTOM_BUTTONS_Y,
+			isInGame ? IN_GAME_BUTTON_W : 100,
 			BOTTOM_BUTTONS_H,
 			() => { sceneManager.showScene(Home); },
 			'CENTER'

@@ -22,7 +22,7 @@ class Levels extends Depth1Scene {
                     ),
                     LEVEL_BUTTON_S,
                     LEVEL_BUTTON_S,
-                    () => sceneManager.showScene(levelNum),
+                    () => sceneManager.showScene(Game, levelNum),
                     'CENTER'
                 ));
             }

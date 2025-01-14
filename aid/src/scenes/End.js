@@ -15,7 +15,7 @@ class End extends Scene {
 			ringX += 2;
 			imageMode(CENTER);
 			CZy = 360 + (CZy - 360) * 0.99;
-			image(images.characters[0], 720, CZy, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+			image(images.characters[0], 720, CZy, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
 			scaleRing(ringX, 360, 600, LEVELS.length);
 		// Animation phase 2: Zoom out to infinity
 		} else if (playerScale < 1000) {
@@ -23,7 +23,7 @@ class End extends Scene {
 			for (let i = floor(playerScale - 10); i <= playerScale; i++) {
 				scaleRing(ringX, 360, 10 ** (i - playerScale) * 600, i);
 			}
-			image(images.characters[0], 720, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+			image(images.characters[0], 720, 360, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
 		// Animation phase 3: Infinitus fades in and fights Captain Zero
 		} else if (!finishedAnim) {
 			if (fightPos) scaleRing(ringX, 360, 600, '∞');
@@ -31,14 +31,14 @@ class End extends Scene {
 			if (infinitusFade < 255) {
 				infinitusFade += 255 / 360;
 				tint(255, infinitusFade);
-				image(images.characters[1], 240, 360, playerSize, playerSize * images.INFINITUS_RATIO);
+				image(images.characters[1], 240, 360, PLAYER_H, PLAYER_H * images.INFINITUS_RATIO);
 				tint(255, 255);
-				image(images.characters[0], 720, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+				image(images.characters[0], 720, 360, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
 			// Characters fly at each other
 			} else if (fightPos) {
 				fightPos -= 3;
-				image(images.characters[1], 480 - fightPos, 360, playerSize, playerSize * images.INFINITUS_RATIO);
-				image(images.characters[0], 480 + fightPos, 360, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+				image(images.characters[1], 480 - fightPos, 360, PLAYER_H, PLAYER_H * images.INFINITUS_RATIO);
+				image(images.characters[0], 480 + fightPos, 360, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
 			// Explosion
 			} else if (explosionSize < 2000) {
 				const alpha = 255 - explosionSize / 8;

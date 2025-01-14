@@ -43,9 +43,9 @@ class Entity {
 }
 class Player extends Entity {
 	constructor() {
-		super(0, 0, playerSize * images.CAPTAIN_ZERO_RATIO, playerSize);
+		super(0, 0, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
 		this.spawnPos = spawnPos.copy();
-		this.spawnPos.x += (tileSize - this.w) / 2;
+		this.spawnPos.x += (CELL_SIZE - this.w) / 2;
 		this.spawn();
 	}
 
@@ -84,7 +84,7 @@ class Block extends Entity {
 	}
 
 	draw() {
-		fill.apply(null, levelsData[level - 1].blockCol);
+		fill.apply(null, LEVELS_DATA[curLevel - 1].blockCol);
 		if (this.selected) fill(128 * (1 + sin(frameCount / 10)), 128 * (1 + sin(frameCount / 10)), 255);
 		noStroke();
 		rect(this.pos.x, this.pos.y, this.w, this.h);
@@ -101,7 +101,7 @@ class Block extends Entity {
 }
 class Spawn extends Entity {
 	constructor(x, y) {
-		super(x, y, tileSize, tileSize);
+		super(x, y, CELL_SIZE, CELL_SIZE);
 		spawnPos = this.pos;
 	}
 
@@ -164,7 +164,7 @@ class Text extends Entity {
 	}
 
 	draw() {
-		fill.apply(null, levelsData[level - 1].textCol);
+		fill.apply(null, LEVELS_DATA[curLevel - 1].textCol);
 		textSize(15);
 		textAlign(CENTER, TOP);
 		text(this.txt, this.pos.x - (this.textW ? this.w / 2 : 0), this.pos.y, this.textW);
@@ -188,7 +188,7 @@ function drawNumber(name, pos, w, h, defColor) {
 }
 class _Number extends Entity {
 	constructor(x, y, name) {
-		super(x, y, tileSize, tileSize);
+		super(x, y, CELL_SIZE, CELL_SIZE);
 		this.name = name;
 	}
 
@@ -197,7 +197,7 @@ class _Number extends Entity {
 	}
 	onCollision() {
 		fillNull(numbers, this.name);
-		alreadyFound.push([this.pos, level]);
+		alreadyFound.push([this.pos, curLevel]);
 		this.deleteMe = true;
 	}
 }
@@ -213,7 +213,7 @@ function drawOperator(name, pos, w, h) {
 }
 class Operator extends Entity {
 	constructor(x, y, name) {
-		super(x, y, tileSize, tileSize);
+		super(x, y, CELL_SIZE, CELL_SIZE);
 		this.name = name;
 	}
 
@@ -222,7 +222,7 @@ class Operator extends Entity {
 	}
 	onCollision() {
 		fillNull(operators, this.name);
-		alreadyFound.push([this.pos, level]);
+		alreadyFound.push([this.pos, curLevel]);
 		this.deleteMe = true;
 	}
 }
@@ -254,7 +254,7 @@ function drawMachine(pos, w, h) {
 }
 class Machine extends Entity {
 	constructor(x, y) {
-		super(x, y, tileSize, tileSize);
+		super(x, y, CELL_SIZE, CELL_SIZE);
 	}
 
 	draw() {
@@ -262,15 +262,15 @@ class Machine extends Entity {
 	}
 	onCollision() {
 		hasMachine = true;
-		alreadyFound.push([this.pos, level]);
-		showExplanation = true;
+		alreadyFound.push([this.pos, curLevel]);
+		showingExplanation = true;
 		toolbarImg = get(720, 0, 240, 960);
 		this.deleteMe = true;
 	}
 }
 class Cannon extends Entity {
 	constructor(x, y) {
-		Entity.call(this, x, y, tileSize, tileSize);
+		Entity.call(this, x, y, CELL_SIZE, CELL_SIZE);
 		this.bullets = [];
 		this.pointing = createVector(1, 0);
 		this.inRange = false;
@@ -297,7 +297,7 @@ class Cannon extends Entity {
 	}
 	update() {
 		// Random seeding makes cannons fire in staggered intervals
-		if (this.pos.dist(player.pos) < tileSize * 20) {
+		if (this.pos.dist(player.pos) < CELL_SIZE * 20) {
 			if (random() < 0.05) this.inRange = true;
 		} else this.inRange = false;
 		if (this.inRange) {
@@ -332,26 +332,6 @@ class Cannon extends Entity {
 	onCollision() {
 		this.pushPlayer();
 	}
-}
-function generateLevel() {
-	entities = [];
-	levelsData[level - 1].entities.forEach(entity => {
-		const newEntity = eval(`new ${entity[0]}(${JSON.stringify(entity.slice(1)).replace(/\[|\]/g, '')})`);
-		// If the entity is a number or operator, make sure it has not already been picked up in the current game
-		var alreadyPickedUp = false;
-		if (["_Number", "Operator", "Machine"].indexOf(entity[0]) > -1) {
-			alreadyFound.forEach(e => {
-				if (newEntity.pos.equals(e[0]) && level == e[1]) alreadyPickedUp = true;
-			});
-		}
-		if (!alreadyPickedUp) entities.push(newEntity);
-	});
-	(userMadeBlocks[level - 1] || []).forEach(block => {
-		entities.push(new Block(block.pos.x, block.pos.y, block.w, block.h, true));
-	});
-	player = new Player();
-	entities.push(player);
-	playerScale = level;
 }
 function scaleRing(x, y, sz, _scale) {
 	stroke(255, 64);
