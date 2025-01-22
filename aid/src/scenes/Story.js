@@ -17,7 +17,10 @@ class Story extends Depth1Scene {
             BOTTOM_BUTTONS_Y,
             60,
             BOTTOM_BUTTONS_H,
-            () => { Story.page++; }
+            () => {
+                if (Story.page < 6) Story.page++;
+                else SceneManager.fadeToScene(Game, 1);
+            }
         ));
         this.buttons.push(new Button(
             'Skip to Game',
@@ -25,7 +28,7 @@ class Story extends Depth1Scene {
             BOTTOM_BUTTONS_Y,
             180,
             BOTTOM_BUTTONS_H,
-            () => { Story.page = 7; },
+            () => { SceneManager.fadeToScene(Game, 1); },
             'RIGHT'
         ));
     }
@@ -93,8 +96,6 @@ Inside this closest was the longest`, 0, 40, INTRINSIC_W);
 But you are no mere mortal. You are Captain Zero; it is your destiny to meet the immortal Infinitus.`, INTRINSIC_W / 2, 180, INTRINSIC_W);
                 image(images.characters[0], INTRINSIC_W / 2, INTRINSIC_H * 0.6);
                 break;
-            default:
-                sceneManager.showScene(Game);
         }
         rectMode(CORNER);
     }

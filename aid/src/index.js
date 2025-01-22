@@ -9,8 +9,6 @@ const CAPTAIN_ZERO_RATIO = 158 / 256, INFINITUS_RATIO = 112 / 256;
 const INTRINSIC_W = 960, INTRINSIC_H = 720; // Dimensions of content before scaling
 const ASSET_PATH = 'images';
 
-const sceneManager = new SceneManager();
-
 /**
  * Loads images
  */
@@ -28,8 +26,8 @@ function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
 	canvas.parent('body');
 	
-    sceneManager.wire();
-    sceneManager.showScene(Home);
+	SceneManager.fadeToScene(Home);
+	SceneManager.wire();
 }
 
 function windowResized() {

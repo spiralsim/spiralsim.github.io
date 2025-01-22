@@ -30,7 +30,7 @@ class Game extends Scene {
             510,
             160,
             60,
-            () => this.enterLevel(curLevel)
+            () => { SceneManager.fadeToScene(Game, curLevel); }
         ));
         this.buttons.push(new HomeButton(true));
     }

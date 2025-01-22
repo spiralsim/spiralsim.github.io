@@ -67,7 +67,7 @@ class HomeButton extends Button {
 			isInGame ? BOTTOM_BUTTONS_Y - 80 : BOTTOM_BUTTONS_Y,
 			isInGame ? IN_GAME_BUTTON_W : 100,
 			BOTTOM_BUTTONS_H,
-			() => { sceneManager.showScene(Home); },
+			() => { SceneManager.fadeToScene(Home); },
 			'CENTER'
 		);
 	}

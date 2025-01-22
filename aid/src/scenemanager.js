@@ -1,177 +1,82 @@
 //
-// Adapted from p5.SceneManager (licensed under CC BY 2.0)
+// Adapted from p5.SceneManager
 // https://github.com/mveteanu/p5.SceneManager
+// Licensed under CC BY 2.0
+// https://creativecommons.org/licenses/by/2.0/
 // 
 
 var mouseCoordX, mouseCoordY; // The coordinates of the mouse mapped to the main square
 var pMouseIsPressed, mouseIsReleased; // mouseIsClicked stores whether the mouse was released in this frame
 
 const MAIN_MARGIN = 20; // Minimum margin between main content and canvas
+const SCENE_FADE_RATE = 25;
 
-function SceneManager(p) {
-    this.scenes = [];
-    this.scene = null;
-    
+class SceneManager {
+    static scenes = [];
+    static scene = null;
+    static nextScene = null;
+    static nextSceneArgs = null;
+    static fade = 0;
+    static fadeDelta;
+
     // Wire relevant p5.js events, except setup()
     // If you don't call this method, you need to manually wire events
-    this.wire = function()
-    {
-        const P5Events = [ "mouseClicked", 
-                "mousePressed", 
-                "mouseReleased", 
-                "mouseMoved", 
-                "mouseDragged", 
-                "doubleClicked", 
-                "mouseWheel", 
-                "keyPressed", 
-                "keyReleased", 
-                "keyTyped", 
-                "touchStarted", 
-                "touchMoved", 
-                "touchEnded", 
-                "deviceMoved", 
-                "deviceTurned", 
-                "deviceShaken" ];
-
-        var me = this;
-        var o = p != null ? p : window;
-
+    static wire() {
+        const P5Events = ["mouseClicked",
+            "mousePressed",
+            "mouseReleased",
+            "mouseMoved",
+            "mouseDragged",
+            "doubleClicked",
+            "mouseWheel",
+            "keyPressed",
+            "keyReleased",
+            "keyTyped",
+            "touchStarted",
+            "touchMoved",
+            "touchEnded",
+            "deviceMoved",
+            "deviceTurned",
+            "deviceShaken"];
+        
         // Wire draw manually for speed reasons...
-        o.draw = function(){ me.draw(); };
+        window.draw = SceneManager.draw;
 
         // This loop will wire automatically all P5 events to each scene like this:
         // o.mouseClicked = function() { me.handleEvent("mouseClicked"); }
-        for(var i = 0; i < P5Events.length; i++)
-        {
+        for (var i = 0; i < P5Events.length; i++) {
             let sEvent = P5Events[i]; // let is necesary to set the scope at the level of for
-            o[sEvent] = function() { me.handleEvent(sEvent) };
+            window[sEvent] = function () { SceneManager.handleEvent(sEvent); };
         }
-        
-        return me;
     }
 
-
-    // Add a scene to the collection
-    // You need to add all the scenes if intend to call .showNextScene()
-    this.addScene = function( fnScene )
-    {
-        var oScene = new fnScene(p);
-
-        // inject p as a property of the scene
-        this.p = p;
-        
-        // inject sceneManager as a property of the scene
-        oScene.sceneManager = this;
-
-        var o = {   fnScene: fnScene, 
-                    oScene: oScene,
-                    hasSetup : "setup" in oScene,
-                    hasEnter : "enter" in oScene,
-                    hasDraw : "draw" in oScene,
-                    setupExecuted : false,
-                    enterExecuted : false };
-
-        this.scenes.push(o);
-        return o;
+    static addScene(sceneClass) {
+        const scene = new sceneClass();
+        SceneManager.scenes.push(scene);
+        return scene;
     }
 
-    // Return the index of a scene in the internal collection
-    this.findSceneIndex = function( fnScene )
-    {
-        for(var i = 0; i < this.scenes.length; i++)
-        {
-            var o = this.scenes[i]; 
-            if ( o.fnScene == fnScene )
-                return i;
-        }
-
-        return -1;
-    }
-
-    // Return a scene object wrapper
-    this.findScene = function( fnScene )
-    {
-        var i = this.findSceneIndex( fnScene );
-        return i >= 0 ? this.scenes[i] : null;
-    }
-
-    // Returns true if the current displayed scene is fnScene
-    this.isCurrent = function ( fnScene )
-    {
-        if ( this.scene == null )
-            return false;
-
-        return this.scene.fnScene == fnScene;
+    static findScene(sceneClass) {
+        return SceneManager.scenes.find(s => s instanceof sceneClass);
     }
 
     // Show a scene based on the function name
     // Optionally you can send arguments to the scene
     // Arguments will be retrieved in the scene via .sceneArgs property
-    this.showScene = function( fnScene, sceneArgs )
-    {
-        var o = this.findScene( fnScene );
-
-        if ( o == null )
-            o = this.addScene( fnScene );
-        
-        // Re-arm the enter function at each show of the scene
-        o.enterExecuted = false;
-
-        this.scene = o;
-
-        // inject sceneArgs as a property of the scene
-        o.oScene.sceneArgs = sceneArgs;
+    static fadeToScene(sceneClass, sceneArgs) {
+        SceneManager.nextScene = SceneManager.findScene(sceneClass) ?? SceneManager.addScene(sceneClass);
+        SceneManager.nextSceneArgs = sceneArgs;
+        SceneManager.fade = 0;
+        SceneManager.fadeDelta = SCENE_FADE_RATE;
     }
 
-    // Show the next scene in the collection
-    // Useful if implementing demo applications 
-    // where you want to advance scenes automatically
-    this.showNextScene = function( sceneArgs )
-    {
-        if ( this.scenes.length == 0 )
-            return;
-
-        var nextSceneIndex = 0;
-
-        if ( this.scene != null )
-        {
-            // search current scene... 
-            // can be optimized to avoid searching current scene...
-            var i = this.findSceneIndex( this.scene.fnScene );
-            nextSceneIndex = i < this.scenes.length - 1 ? i + 1 : 0;
-        }
-
-        var nextScene = this.scenes[nextSceneIndex];
-        this.showScene( nextScene.fnScene, sceneArgs );
-    }
-    
     // This is the SceneManager .draw() method
     // This will dispatch the main draw() to the 
     // current scene draw() method
-    this.draw = function()
-    {
-        // take the current scene in a variable to protect it in case
-        // it gets changed by the user code in the events such as setup()...
-        var currScene = this.scene;
-        
-        if ( currScene == null )
-            return;
-
-        if ( currScene.hasSetup && !currScene.setupExecuted  )
-        {
-            currScene.oScene.setup();
-            currScene.setupExecuted = true;
-        }
-
-        if ( currScene.hasEnter && !currScene.enterExecuted  )
-        {
-            currScene.oScene.enter();
-            currScene.enterExecuted = true;
-        }
-
-        if (currScene.hasDraw) {
-            const oScene = currScene.oScene;
-            const bg = oScene.background;
+    static draw() {
+        const scene = SceneManager.scene;
+        if (scene) {
+            const bg = scene.background;
             // Uses the minimum scale factor for the background that fills the canvas
             background('white');
             if (bg instanceof p5.Image) {
@@ -204,10 +109,21 @@ function SceneManager(p) {
             cursor(ARROW);
             fill(0);
             noStroke();
-            oScene.draw();
-            if (oScene.buttons) oScene.buttons.forEach(b => b.run());
+            scene.draw();
+            if (scene.buttons) scene.buttons.forEach(b => b.run());
             pop();
-        }
+        } else background('black');
+
+        console.log(SceneManager.fade);
+        if (SceneManager.nextScene) {
+            console.log('should fade');
+            if (SceneManager.fade >= 255) {
+                SceneManager.scene = SceneManager.nextScene;
+                SceneManager.scene.enter(SceneManager.nextSceneArgs);
+                SceneManager.nextScene = null;
+            } else SceneManager.fade += SCENE_FADE_RATE;
+        } else if (SceneManager.fade > 0) SceneManager.fade -= SCENE_FADE_RATE;
+        background(255, 255, 255, SceneManager.fade);
 
         mouseIsReleased = !mouseIsPressed && pMouseIsPressed;
         pMouseIsPressed = mouseIsPressed;
@@ -215,26 +131,12 @@ function SceneManager(p) {
 
     // Handle a certain event for a scene... 
     // It is used by the anonymous functions from the wire() function
-    this.handleEvent = function(sEvent)
-    {
-        if ( this.scene == null || this.scene.oScene == null )
+    static handleEvent(sEvent) {
+        if (SceneManager.scene == null || SceneManager.scene.oScene == null)
             return;
 
-        var fnSceneEvent = this.scene.oScene[sEvent];
+        var fnSceneEvent = SceneManager.scene.oScene[sEvent];
         if (fnSceneEvent)
-            fnSceneEvent.call(this.scene.oScene);
+            fnSceneEvent.call(SceneManager.scene.oScene);
     }
-
-    // Legacy method... preserved for maintaining compatibility
-    this.mousePressed = function()
-    {
-        this.handleEvent("mousePressed");
-    }
-
-    // Legacy method... preserved for maintaining compatibility
-    this.keyPressed = function()
-    {
-        this.handleEvent("keyPressed");
-    }
-
 }
