@@ -1,4 +1,9 @@
 const CELL_SIZE = 30, PLAYER_H = CELL_SIZE * 0.8;
+// Scale factors computed based on target player height
+const CHARACTER_SCALE_FACTOR = PLAYER_H / CAPTAIN_ZERO_ORIGINAL_DIMENSIONS[1];
+const PLAYER_W = CAPTAIN_ZERO_ORIGINAL_DIMENSIONS[0] * CHARACTER_SCALE_FACTOR;
+const INFINITUS_W = INFINITUS_ORIGINAL_DIMENSIONS[0] * CHARACTER_SCALE_FACTOR,
+    INFINITUS_H = INFINITUS_ORIGINAL_DIMENSIONS[1] * CHARACTER_SCALE_FACTOR;
 const RELOAD_TIME = 60;
 
 const LEVEL_WITH_MACHINE = 4;
@@ -22,6 +27,8 @@ if (false) { //devmode
 }
 
 class Game extends Scene {
+    hasTintedBackground = false;
+
     constructor() {
         super();
         this.buttons.push(new Button(

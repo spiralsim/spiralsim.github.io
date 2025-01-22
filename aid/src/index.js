@@ -5,7 +5,8 @@ var canvas, images = {
 	characters: [],
 	entities: []
 };
-const CAPTAIN_ZERO_RATIO = 158 / 256, INFINITUS_RATIO = 112 / 256;
+const CAPTAIN_ZERO_ORIGINAL_DIMENSIONS = [158, 256];
+const INFINITUS_ORIGINAL_DIMENSIONS = [256, 111];
 const INTRINSIC_W = 960, INTRINSIC_H = 720; // Dimensions of content before scaling
 const ASSET_PATH = 'images';
 

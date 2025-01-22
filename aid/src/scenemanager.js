@@ -80,7 +80,7 @@ class SceneManager {
             // Uses the minimum scale factor for the background that fills the canvas
             background('white');
             if (bg instanceof p5.Image) {
-                tint(255, 64);
+                if (scene.hasTintedBackground) tint(255, 64);
                 image(bg, 0, 0, width, height, 0, 0, bg.width, bg.height, COVER);
                 noTint();
             }
@@ -113,10 +113,8 @@ class SceneManager {
             if (scene.buttons) scene.buttons.forEach(b => b.run());
             pop();
         } else background('black');
-
-        console.log(SceneManager.fade);
+        
         if (SceneManager.nextScene) {
-            console.log('should fade');
             if (SceneManager.fade >= 255) {
                 SceneManager.scene = SceneManager.nextScene;
                 SceneManager.scene.enter(SceneManager.nextSceneArgs);

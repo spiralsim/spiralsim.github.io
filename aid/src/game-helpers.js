@@ -45,7 +45,7 @@ class Entity {
 }
 class Player extends Entity {
     constructor() {
-        super(0, 0, PLAYER_H * images.CAPTAIN_ZERO_RATIO, PLAYER_H);
+        super(0, 0, PLAYER_W, PLAYER_H);
         this.spawnPos = spawnPos.copy();
         this.spawnPos.x += (CELL_SIZE - this.w) / 2;
         this.spawn();
@@ -114,6 +114,8 @@ class Spawn extends Entity {
     }
 }
 class Finish extends Entity {
+    isUsed = false;
+
     constructor(x, y, w, h) {
         super(x, y, w, h);
     }
@@ -124,6 +126,8 @@ class Finish extends Entity {
         rect(this.pos.x, this.pos.y, this.w, this.h);
     }
     onCollision() {
+        if (this.isUsed) return;
+        this.isUsed = true;
         SceneManager.fadeToScene(Game, curLevel + 1);
     }
 }
