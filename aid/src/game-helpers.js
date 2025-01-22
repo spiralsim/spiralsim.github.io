@@ -198,12 +198,11 @@ class _Number extends Entity {
         this.name = name;
     }
 
-    draw() {
-        drawNumber(this.name, this.pos, this.w, this.h, 255);
+    draw(pos = this.pos) {
+        drawNumber(this.name, pos, this.w, this.h, 255);
     }
     onCollision() {
         fillNull(numbers, this.name);
-        alreadyFound.push([this.pos, curLevel]);
         this.deleteMe = true;
     }
 }
@@ -223,12 +222,11 @@ class Operator extends Entity {
         this.name = name;
     }
 
-    draw() {
-        drawOperator(this.name, this.pos, this.w, this.h);
+    draw(pos = this.pos) {
+        drawOperator(this.name, pos, this.w, this.h);
     }
     onCollision() {
         fillNull(operators, this.name);
-        alreadyFound.push([this.pos, curLevel]);
         this.deleteMe = true;
     }
 }
@@ -276,7 +274,7 @@ class Machine extends Entity {
 }
 class Cannon extends Entity {
     constructor(x, y) {
-        Entity.call(this, x, y, CELL_SIZE, CELL_SIZE);
+        super(x, y, CELL_SIZE, CELL_SIZE);
         this.bullets = [];
         this.pointing = createVector(1, 0);
         this.inRange = false;
@@ -285,7 +283,7 @@ class Cannon extends Entity {
 
     draw() {
         noStroke();
-        fill(this.inRange ? color(255, 255, this.reload / reloadTime * 255) : 192);
+        fill(this.inRange ? color(255, 255, this.reload / RELOAD_TIME * 255) : 192);
         rect(this.pos.x, this.pos.y, this.w, this.h);
         push();
         translate(this.center.x, this.center.y);
@@ -316,7 +314,7 @@ class Cannon extends Entity {
                     h: 6,
                     age: 0
                 });
-                this.reload = reloadTime;
+                this.reload = RELOAD_TIME;
             } else this.reload--;
         }
         this.bullets.forEach(b => {

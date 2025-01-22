@@ -33,8 +33,8 @@ class Game extends Scene {
         super();
         this.buttons.push(new Button(
             'Reset Level',
-            INTRINSIC_W - 200,
-            510,
+            0,
+            INTRINSIC_H - BOTTOM_BUTTONS_H / 2,
             160,
             60,
             () => { SceneManager.fadeToScene(Game, curLevel); }
@@ -79,7 +79,7 @@ class Game extends Scene {
         if (player.pos.x < 0 || player.pos.x > 720 || player.pos.y > 720) this.enter();
 
         // Game drawing
-        scaleRing(360, 360, 600, playerScale);
+        scaleRing(INTRINSIC_W / 2, INTRINSIC_H / 2, 600, playerScale);
         entities.forEach(e => e.run());
         entities = entities.filter(e => !e.deleteMe);
 //         if (showingExplanation) {
@@ -115,8 +115,6 @@ class Game extends Scene {
 //         }
 
         // Toolbar
-        fill(192);
-        rect(720, 0, 240, 720);
         fill(0);
         textAlign(CENTER, TOP);
         textSize(18);

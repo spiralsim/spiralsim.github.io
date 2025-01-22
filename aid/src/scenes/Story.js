@@ -1,5 +1,5 @@
 class Story extends Depth1Scene {
-    static page = 1;
+    page = 1;
 
     constructor() {
         super();
@@ -9,7 +9,9 @@ class Story extends Depth1Scene {
             BOTTOM_BUTTONS_Y,
             60,
             BOTTOM_BUTTONS_H,
-            () => { Story.page = max(Story.page - 1, 1); }
+            () => {
+                if (this.page > 1) SceneManager.fadeToScene(Story, this.page - 1);
+            }
         ));
         this.buttons.push(new Button(
             '→',
@@ -18,7 +20,7 @@ class Story extends Depth1Scene {
             60,
             BOTTOM_BUTTONS_H,
             () => {
-                if (Story.page < 6) Story.page++;
+                if (this.page < 6) SceneManager.fadeToScene(Story, this.page + 1);
                 else SceneManager.fadeToScene(Game, 1);
             }
         ));
@@ -33,10 +35,14 @@ class Story extends Depth1Scene {
         ));
     }
 
+    enter(page) {
+        this.page = page ?? 1;
+    }
+
     draw() {
         fill(0);
         textSize(30);
-        if ([1, 6].includes(Story.page)) {
+        if ([1, 6].includes(this.page)) {
             textStyle(ITALIC);
             textAlign(CENTER, CENTER);
             textSize(36);
@@ -49,7 +55,7 @@ class Story extends Depth1Scene {
         }
 
         noStroke();
-        switch (Story.page) {
+        switch (this.page) {
             case 1:
                 text(`Our story begins with Milo's adventures in the Kingdom of Digitopolis, ruled by the Mathemagician and hidden away in the vast Lands Beyond...`, INTRINSIC_W / 2, 240, INTRINSIC_W);
                 textSize(24);

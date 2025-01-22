@@ -63,12 +63,12 @@ class HomeButton extends Button {
 	constructor(isInGame) {
 		super(
 			'Home',
-			isInGame ? INTRINSIC_W - 120 : INTRINSIC_W / 2,
-			isInGame ? BOTTOM_BUTTONS_Y - 80 : BOTTOM_BUTTONS_Y,
+			isInGame ? INTRINSIC_W : INTRINSIC_W / 2,
+			BOTTOM_BUTTONS_Y,
 			isInGame ? IN_GAME_BUTTON_W : 100,
 			BOTTOM_BUTTONS_H,
 			() => { SceneManager.fadeToScene(Home); },
-			'CENTER'
+			isInGame ? 'RIGHT' : 'CENTER'
 		);
 	}
 }
