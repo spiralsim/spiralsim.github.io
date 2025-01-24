@@ -195,9 +195,7 @@ const LEVELS_DATA = [
 			["Block", 240, 210, 30, 30],
 			["Lava", 270, 210, 510, 30],
 			["Block", 660, 180, 120, 30],
-			["Finish", 750, 150, 30, 30],
-			
-			["Text", "Put it all together now!", 480, 90]
+			["Finish", 750, 150, 30, 30]
 		],
 		"blockCol": [128, 64, 128],
 		"textCol": [255],

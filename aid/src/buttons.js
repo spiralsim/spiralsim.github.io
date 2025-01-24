@@ -30,48 +30,44 @@ class Rect {
 }
 
 class Button {
+	fade = 0; // 0 = default, 1 = fully faded
+
 	/**
 	 * @param {Rect} r: The button's hitbox
 	 */
-	constructor(r, onClick) {
+	constructor(r, onClick, fadeRate = 0.1) {
 		this.r = r;
 		this.onClick = onClick;
+		this.fadeRate = fadeRate;
 	}
 
 	onHover() {
 		cursor(HAND);
 		if (mouseIsReleased) this.onClick();
+		this.fade = min(this.fade + this.fadeRate, 1);
 	}
-	onNoHover() {}
+	onNoHover() {
+		this.fade = max(this.fade - this.fadeRate, 0);
+	}
 	run() {
 		if (this.r.collideMouseCoord) this.onHover();
 		else this.onNoHover();
 	}
 }
 
-const BUTTON_FADE_RATE = 25;
 class TransitionButton extends Button {
 	constructor(r, onClick, txt) {
 		super(r, onClick);
 		this.txt = txt;
-		this.fade = 255;
 	}
-
-	onHover() {
-		super.onHover();
-		this.fade = max(this.fade - BUTTON_FADE_RATE, 0);
-	}
-	onNoHover() {
-		super.onNoHover();
-		this.fade = min(this.fade + BUTTON_FADE_RATE, 255);
-	}
+	
 	run() {
 		super.run();
 		stroke(0);
 		strokeWeight(4);
-		fill(this.fade);
+		fill(255 * (1 - this.fade));
 		rect(this.r.x, this.r.y, this.r.w, this.r.h, 5);
-		fill(255 - this.fade);
+		fill(255 * this.fade);
 		textAlign(CENTER, CENTER);
 		noStroke();
 		textSize(24);
@@ -80,6 +76,8 @@ class TransitionButton extends Button {
 	}
 }
 
+const INVENTORY_CAPACITY = 9;
+const SLOT_SIZE = 30;
 function gridColToX(idx, numCols, colDistance) {
 	return lerp(
 		INTRINSIC_W / 2 - colDistance * (numCols - 1) / 2,
@@ -87,9 +85,59 @@ function gridColToX(idx, numCols, colDistance) {
 		idx / (numCols - 1)
 	);
 }
+class InventoryButton extends Button {
+	item = null;
+
+	constructor(index) {
+		super(
+			new Rect(
+				gridColToX(index, INVENTORY_CAPACITY, SLOT_SIZE),
+				INTRINSIC_H - SLOT_SIZE / 2,
+				SLOT_SIZE,
+				SLOT_SIZE,
+				'CENTER',
+				'CENTER'
+			),
+			() => {}
+		);
+	}
+
+	setItem(item) {
+		this.item = item;
+	}
+	run() {
+		super.run();
+		fill(lerp(255, 192, this.fade), 192);
+		strokeWeight(2);
+		stroke(0);
+		square(this.r.x, this.r.y, SLOT_SIZE);
+		if (this.item) this.item.draw(createVector(this.r.x, this.r.y));
+	}
+}
+
+class CloseManualButton extends Button {
+	static S = 30;
+
+	constructor(pos) {
+		super(
+			new Rect(pos.x, pos.y, CloseManualButton.S, CloseManualButton.S),
+			() => { showingManual = false; }
+		);
+	}
+
+	run() {
+		super.run();
+		fill(lerp(255, 128, this.fade), 192);
+		circle(this.r.x + this.r.w / 2, this.r.y + this.r.h / 2, this.r.w);
+		noStroke();
+		textSize(30);
+		fill(0);
+		textAlign(CENTER, CENTER)
+        text('×', this.r.x + this.r.w / 2, this.r.y + this.r.h / 2);
+	}
+}
 
 const BOTTOM_BUTTONS_H = 60;
-const BOTTOM_BUTTONS_Y = INTRINSIC_H - BOTTOM_BUTTONS_H / 2;
 const IN_GAME_BUTTON_W = 160;
 
 class HomeButton extends TransitionButton {

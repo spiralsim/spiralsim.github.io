@@ -43,6 +43,7 @@ class Entity {
         if (this.checkCollision(player)) this.onCollision();
     }
 }
+
 class Player extends Entity {
     constructor() {
         super(0, 0, PLAYER_W, PLAYER_H);
@@ -177,78 +178,6 @@ class Text extends Entity {
         text(this.txt, this.pos.x - Text.TEXT_WIDTH / 2, this.pos.y, Text.TEXT_WIDTH);
     }
 }
-class Item extends Entity {
-    constructor(x, y, name) {
-        super(x, y, CELL_SIZE, CELL_SIZE);
-        this.name = name;
-    }
-
-    onCollision() {
-        // Fills first empty inventory slot with a copy of this item
-        inventory[inventory.indexOf(null)] = new Item(0, 0, this.name);
-        this.deleteMe = true;
-    }
-}
-class Numeral extends Item {
-    draw(pos = this.pos) {
-        fill(255, 192);
-        noStroke();
-        circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
-        colorMode(HSB);
-        if (parseInt(this.name)) fill(360 * (parseInt(this.name) / 10), 100, 100);
-        else fill(255);
-        textSize(this.w);
-        textAlign(CENTER, CENTER);
-        noStroke();
-        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
-        colorMode(RGB);
-    }
-}
-class Operator extends Item {
-    draw(pos = this.pos) {
-        fill(255, 192);
-        noStroke();
-        circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
-        fill(64);
-        textSize(this.w);
-        textAlign(CENTER, CENTER);
-        noStroke();
-        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
-    }
-}
-class Machine extends Item {
-    draw(pos = this.pos) {
-        strokeWeight(1);
-        push();
-        translate(pos.x + this.w / 2, pos.y + this.h / 2);
-        noFill();
-        stroke(0, 0, 255, 128);
-        for (let i = 0; i < 6; i++) {
-            rotate(PI / 6);
-            ellipse(0, 0, this.w * sin(frameCount / 10 + i), this.h / 2 * sin(frameCount / 10 + i));
-        }
-        fill(255, 128);
-        stroke(0);
-        rectMode(CENTER);
-        rotate(frameCount / 20);
-        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
-        rotate(-frameCount / 10);
-        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
-        // Equals sign
-        noStroke();
-        fill(0);
-        textAlign(CENTER, CENTER);
-        rect(0, -this.h / 12, this.w * 1 / 3, this.h / 12);
-        rect(0, this.h / 12, this.w * 1 / 3, this.h / 12);
-        rectMode(CORNER);
-        pop();
-    }
-    onCollision() {
-        hasMachine = true;
-        showingExplanation = true;
-        this.deleteMe = true;
-    }
-}
 class Cannon extends Entity {
     constructor(x, y) {
         super(x, y, CELL_SIZE, CELL_SIZE);
@@ -314,6 +243,87 @@ class Cannon extends Entity {
         this.pushPlayer();
     }
 }
+
+class Item extends Entity {
+    isCollected = false;
+
+    constructor(x, y, name) {
+        super(x, y, CELL_SIZE, CELL_SIZE);
+        this.name = name;
+    }
+
+    onCollision() {
+        if (this.isCollected) return;
+        // Fills first empty inventory slot with a copy of this item
+        const slot = inventory.find(b => !b.item);
+        this.pos = createVector(slot.r.x, slot.r.y);
+        slot.setItem(this);
+        this.isCollected = true;
+    }
+}
+class Numeral extends Item {
+    draw(pos = this.pos) {
+        // fill(255, 192);
+        // noStroke();
+        // circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        colorMode(HSB);
+        if (parseInt(this.name)) fill(360 * (parseInt(this.name) / 10), 100, 80);
+        else fill(255);
+        textSize(this.w);
+        textAlign(CENTER, CENTER);
+        stroke(255);
+        strokeWeight(1);
+        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
+        colorMode(RGB);
+    }
+}
+class Operator extends Item {
+    draw(pos = this.pos) {
+        // fill(255, 192);
+        // noStroke();
+        // circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        fill(64);
+        textSize(this.w);
+        textAlign(CENTER, CENTER);
+        stroke(255);
+        strokeWeight(1);
+        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
+    }
+}
+class Machine extends Item {
+    draw(pos = this.pos) {
+        strokeWeight(1);
+        push();
+        translate(pos.x + this.w / 2, pos.y + this.h / 2);
+        noFill();
+        stroke(0, 0, 255, 128);
+        for (let i = 0; i < 6; i++) {
+            rotate(PI / 6);
+            ellipse(0, 0, this.w * sin(frameCount / 10 + i), this.h / 2 * sin(frameCount / 10 + i));
+        }
+        fill(255, 128);
+        stroke(0);
+        rectMode(CENTER);
+        rotate(frameCount / 20);
+        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
+        rotate(-frameCount / 10);
+        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
+        // Equals sign
+        noStroke();
+        fill(0);
+        textAlign(CENTER, CENTER);
+        rect(0, -this.h / 12, this.w * 1 / 3, this.h / 12);
+        rect(0, this.h / 12, this.w * 1 / 3, this.h / 12);
+        rectMode(CORNER);
+        pop();
+    }
+    onCollision() {
+        hasMachine = true;
+        showingManual = true;
+        this.deleteMe = true;
+    }
+}
+
 function scaleRing(x, y, sz, _scale) {
     stroke(255, 64);
     noFill();

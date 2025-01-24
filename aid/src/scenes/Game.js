@@ -8,8 +8,7 @@ const RELOAD_TIME = 60;
 
 const LEVEL_WITH_MACHINE = 4;
 
-const INVENTORY_CAPACITY = 9;
-const SLOT_SIZE = 60;
+const closeManualButton = new CloseManualButton({x: 800, y: 130});
 
 var curLevel;
 var entities;
@@ -19,7 +18,7 @@ var hasMachine;
 var expression;
 var evalCol = 255;
 var errMsg = '';
-var showingExplanation, filling, okMsg = "", fillSize, selBlocks = [];
+var showingManual, filling, okMsg = "", fillSize, selBlocks = [];
 var spawnPos, playerScale;
 
 if (false) { //devmode
@@ -62,10 +61,10 @@ class Game extends Scene {
             .map(e => eval(`new ${e[0]}(...${JSON.stringify(e.slice(1))})`));
         player = new Player();
         entities.push(player);
-        inventory = Array(9).fill(null);
+        inventory = Array(9).fill(0).map((_, i) => new InventoryButton(i));
         hasMachine = curLevel > LEVEL_WITH_MACHINE;
         expression = '';
-        showingExplanation = false;
+        showingManual = false;
         filling = false;
         playerScale = nxtLevel;
     }
@@ -83,60 +82,51 @@ class Game extends Scene {
         if (player.jumping) player.vel.y += 0.15;
         player.jumping = true; // By default, assume the player is in the air and should be accelerated by gravity
         // If the player falls off the map, restart
-        if (player.pos.x < 0 || player.pos.x > 720 || player.pos.y > 720) this.enter();
+        if (player.pos.x < 0 || player.pos.x > INTRINSIC_W || player.pos.y > INTRINSIC_H) this.enter();
 
         // Game drawing
         scaleRing(INTRINSIC_W / 2, INTRINSIC_H / 2, 600, playerScale);
         entities.forEach(e => e.run());
         entities = entities.filter(e => !e.deleteMe);
-//         if (showingExplanation) {
-//             fill(255, 128);
-//             rect(0, 0, 720, 720);
-//             fill(192);
-//             rect(120, 120, 480, 480, 20);
-//             fill(0);
-//             textSize(30);
-//             text("A marvelous new machine!", 360, 140);
-//             textSize(14);
-//             text(`You have found a filling machine.
+        if (showingManual) {
+            fill(255);
+            rect(120, 120, 720, 480, 20);
+            fill(0);
+            textSize(36);
+            text("Filling Machine Manual", INTRINSIC_W / 2, 140);
+            textSize(24);
+            textAlign(LEFT);
+            text(`1
 
-// To use this machine, first make a mathematical expression out of numbers and operators. Each number and operator can only be used once (although you may pick up more copies of it later in the game). Then, press [Evaluate] to simplify the expression. Be careful, though: once an expression is evaluated, the numbers and operators in it are used up forever. Also, the machine can only handle integer outputs.
 
-// Finally, press [Fill] to begin filling. When filling, you need to select two blocks that line up exactly with each other, as shown below. The distance between them, in grid tiles, needs to be exactly the value of the expression. You can measure this distance by trying to fill without an expression entered. The gap between the blocks will then be filled with a new block.`, 150, 180, 420);
-//             textAlign(LEFT);
-//             rect(160, 480, 20, 40);
-//             rect(160, 540, 20, 40);
-//             text("Can fill", 200, 520);
-//             rect(320, 480, 20, 40);
-//             rect(340, 540, 20, 40);
-//             text("Cannot fill", 380, 520);
-//             rect(480, 480, 20, 40);
-//             rect(480, 540, 10, 40);
-//             text("Cannot fill", 520, 520);
-//             textSize(30);
-//             text('×', 570, 130);
-//             if (mouseX > 560 && mouseX < 600 && mouseY > 120 && mouseY < 160) {
-//                 cursor(HAND);
-//                 if (clicking) showingExplanation = false;
-//             }
-//         }
+2
+3
+
+
+
+Note that the two blocks must line up exactly with each other.`, 150, 180);
+            text(`Measure the distance between two blocks you want to fill between by pressing the machine and then pressing the desired blocks.
+            To cancel the fill, press the machine again.
+            Type a mathematical expression by pressing on numerals and operators in your inventory that evaluates to the required distance. The gap will be filled by a new block.`, 170, 180, 640);
+            rect(160, 480, 20, 40);
+            rect(160, 540, 20, 40);
+            text('✓', 200, 520);
+            rect(380, 480, 20, 40);
+            rect(400, 540, 20, 40);
+            text('×', 440, 520);
+            rect(640, 480, 20, 40);
+            rect(640, 540, 10, 40);
+            text('×', 680, 520);
+            closeManualButton.run();
+        }
 
         // Toolbar
         fill(0);
         textAlign(CENTER, TOP);
         textSize(18);
         // Numbers and Operators
-        if (inventory.some(i => i != null)) {
-            const y = INTRINSIC_H - SLOT_SIZE / 2;
-            for (let i = 0; i < INVENTORY_CAPACITY; i++) {
-                const x = gridColToX(i, INVENTORY_CAPACITY, SLOT_SIZE);
-                fill(255, 255, 255, 192);
-                strokeWeight(2);
-                stroke(0);
-                square(x, y, SLOT_SIZE);
-                if (inventory[i]) inventory[i].draw(createVector(x, y));
-            }
-        }
+        if (inventory.some(button => button.item != null))
+            inventory.forEach(button => { button.run(); });
         // // Expression
         // if (hasMachine) {
         //     // Expression editor
