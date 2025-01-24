@@ -8,6 +8,9 @@ const RELOAD_TIME = 60;
 
 const LEVEL_WITH_MACHINE = 4;
 
+const INVENTORY_CAPACITY = 9;
+const SLOT_SIZE = 60;
+
 var curLevel;
 var entities;
 var player;
@@ -31,13 +34,17 @@ class Game extends Scene {
 
     constructor() {
         super();
-        this.buttons.push(new Button(
-            'Reset Level',
-            0,
-            INTRINSIC_H - BOTTOM_BUTTONS_H / 2,
-            160,
-            60,
-            () => { SceneManager.fadeToScene(Game, curLevel); }
+        this.buttons.push(new TransitionButton(
+            new Rect(
+                0,
+                INTRINSIC_H,
+                160,
+                60,
+                'LEFT',
+                'BOTTOM'
+            ),
+            () => { SceneManager.fadeToScene(Game, curLevel); },
+            'Reset Level'
         ));
         this.buttons.push(new HomeButton(true));
     }
@@ -114,35 +121,22 @@ class Game extends Scene {
 //             }
 //         }
 
-        // // Toolbar
-        // fill(0);
-        // textAlign(CENTER, TOP);
-        // textSize(18);
-        // // Numbers and Operators
-        // strokeWeight(2);
-        // var entityArr = [numbers, operators][n], entityDrawFunc = [drawNumber, drawOperator][n];
-        // const R = 3, C = 3;
-        // for (let r = 0; r < R; r++) {
-        //     for (let c = 0; c < C; c++) {
-        //         const i = r * C + c, corner = { x: 730 + c * 46, y: 144 + n * 102 + r * 46 };
-        //         stroke(0);
-        //         fill(hasMachine ? 255 : 192);
-        //         if ((mouseX > corner.x && mouseX < corner.x + 36 && mouseY > corner.y && mouseY < corner.y + 36) && hasMachine) {
-        //             fill(192);
-        //             cursor(HAND);
-        //             if (mouseIsPressed) {
-        //                 fill(128);
-        //                 if (entityArr[i] && !filling) {
-        //                     expression += entityArr[i];
-        //                     entityArr[i] = null;
-        //                     evalCol = 255;
-        //                 }
-        //             }
-        //         }
-        //         rect(corner.x, corner.y, 36, 36);
-        //         if (entityArr[i]) entityDrawFunc(entityArr[i], corner, 36, 36, 0);
-        //     }
-        // }
+        // Toolbar
+        fill(0);
+        textAlign(CENTER, TOP);
+        textSize(18);
+        // Numbers and Operators
+        if (inventory.some(i => i != null)) {
+            const y = INTRINSIC_H - SLOT_SIZE / 2;
+            for (let i = 0; i < INVENTORY_CAPACITY; i++) {
+                const x = gridColToX(i, INVENTORY_CAPACITY, SLOT_SIZE);
+                fill(255, 255, 255, 192);
+                strokeWeight(2);
+                stroke(0);
+                square(x, y, SLOT_SIZE);
+                if (inventory[i]) inventory[i].draw(createVector(x, y));
+            }
+        }
         // // Expression
         // if (hasMachine) {
         //     // Expression editor
@@ -274,6 +268,5 @@ class Game extends Scene {
         //     else if (okMsg) fill(0, 0, 255);
         //     else fill(0);
         //     text(errMsg || okMsg || "Enter an expression. For the √ operator, type √(x) instead of √x.", 730, 455, 220);
-        // }
     }
 }

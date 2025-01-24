@@ -5,13 +5,16 @@ class Rect {
 	 * @param {Number} y 
 	 * @param {Number} w 
 	 * @param {Number} h 
-	 * @param {string} alignX: One of 'LEFT', 'CENTER', or 'RIGHT'
+	 * @param {string} horizAlign: 'LEFT' (default), 'CENTER', or 'RIGHT'
+	 * @param {string} vertAlign: 'TOP' (default), 'CENTER', or 'BOTTOM'
 	 */
-	constructor(x, y, w, h, alignX) {
-		if (alignX == 'CENTER') this.x = x - w / 2;
-		else if (alignX == 'RIGHT') this.x = x - w;
+	constructor(x, y, w, h, horizAlign, vertAlign) {
+		if (horizAlign == 'CENTER') this.x = x - w / 2;
+		else if (horizAlign == 'RIGHT') this.x = x - w;
 		else this.x = x;
-		this.y = y - h / 2;
+		if (vertAlign == 'CENTER') this.y = y - h / 2;
+		else if (vertAlign == 'BOTTOM') this.y = y - h;
+		else this.y = y;
 		this.w = w;
 		this.h = h;
 	}
@@ -26,49 +29,82 @@ class Rect {
 	}
 }
 
-const BUTTON_FADE_RATE = 25;
 class Button {
-	constructor(txt, x, y, w, h, callback, alignX) {
+	/**
+	 * @param {Rect} r: The button's hitbox
+	 */
+	constructor(r, onClick) {
+		this.r = r;
+		this.onClick = onClick;
+	}
+
+	onHover() {
+		cursor(HAND);
+		if (mouseIsReleased) this.onClick();
+	}
+	onNoHover() {}
+	run() {
+		if (this.r.collideMouseCoord) this.onHover();
+		else this.onNoHover();
+	}
+}
+
+const BUTTON_FADE_RATE = 25;
+class TransitionButton extends Button {
+	constructor(r, onClick, txt) {
+		super(r, onClick);
 		this.txt = txt;
-		this.rect = new Rect(x, y, w, h, alignX);
-		this.callback = callback;
 		this.fade = 255;
 	}
 
+	onHover() {
+		super.onHover();
+		this.fade = max(this.fade - BUTTON_FADE_RATE, 0);
+	}
+	onNoHover() {
+		super.onNoHover();
+		this.fade = min(this.fade + BUTTON_FADE_RATE, 255);
+	}
 	run() {
+		super.run();
 		stroke(0);
 		strokeWeight(4);
 		fill(this.fade);
-		rect(this.rect.x, this.rect.y, this.rect.w, this.rect.h, 5);
+		rect(this.r.x, this.r.y, this.r.w, this.r.h, 5);
 		fill(255 - this.fade);
 		textAlign(CENTER, CENTER);
 		noStroke();
 		textSize(24);
 		textStyle(NORMAL);
-		text(this.txt, this.rect.x + this.rect.w / 2, this.rect.y + this.rect.h / 2);
-
-		if (this.rect.collideMouseCoord) {
-			this.fade = max(this.fade - BUTTON_FADE_RATE, 0);
-			cursor(HAND);
-			if (mouseIsReleased) this.callback();
-		} else this.fade = min(this.fade + BUTTON_FADE_RATE, 255);
+		text(this.txt, this.r.x + this.r.w / 2, this.r.y + this.r.h / 2);
 	}
+}
+
+function gridColToX(idx, numCols, colDistance) {
+	return lerp(
+		INTRINSIC_W / 2 - colDistance * (numCols - 1) / 2,
+		INTRINSIC_W / 2 + colDistance * (numCols - 1) / 2,
+		idx / (numCols - 1)
+	);
 }
 
 const BOTTOM_BUTTONS_H = 60;
 const BOTTOM_BUTTONS_Y = INTRINSIC_H - BOTTOM_BUTTONS_H / 2;
 const IN_GAME_BUTTON_W = 160;
 
-class HomeButton extends Button {
+class HomeButton extends TransitionButton {
 	constructor(isInGame) {
 		super(
-			'Home',
-			isInGame ? INTRINSIC_W : INTRINSIC_W / 2,
-			BOTTOM_BUTTONS_Y,
-			isInGame ? IN_GAME_BUTTON_W : 100,
-			BOTTOM_BUTTONS_H,
+			new Rect(
+				isInGame ? INTRINSIC_W : INTRINSIC_W / 2,
+				INTRINSIC_H,
+				isInGame ? IN_GAME_BUTTON_W : 100,
+				BOTTOM_BUTTONS_H,
+				isInGame ? 'RIGHT' : 'CENTER',
+				'BOTTOM'
+			),
 			() => { SceneManager.fadeToScene(Home); },
-			isInGame ? 'RIGHT' : 'CENTER'
+			'Home'
 		);
 	}
 }

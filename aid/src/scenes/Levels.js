@@ -8,22 +8,21 @@ class Levels extends Depth1Scene {
         for (let r = 0; r < R; r++) {
             for (let c = 0; c < C; c++) {
                 const levelNum = r * C + c + 1;
-                this.buttons.push(new Button(
-                    '' + levelNum,
-                    lerp(
-                        INTRINSIC_W / 2 - LEVEL_BUTTON_DISTANCE * (C - 1) / 2,
-                        INTRINSIC_W / 2 + LEVEL_BUTTON_DISTANCE * (C - 1) / 2,
-                        c / (C - 1)
+                this.buttons.push(new TransitionButton(
+                    new Rect(
+                        gridColToX(c, C, LEVEL_BUTTON_DISTANCE),
+                        lerp(
+                            INTRINSIC_H / 2 - LEVEL_BUTTON_DISTANCE * (R - 1) / 2,
+                            INTRINSIC_H / 2 + LEVEL_BUTTON_DISTANCE * (R - 1) / 2,
+                            r / (R - 1)
+                        ),
+                        LEVEL_BUTTON_S,
+                        LEVEL_BUTTON_S,
+                        'CENTER',
+                        'CENTER'
                     ),
-                    lerp(
-                        INTRINSIC_H / 2 - LEVEL_BUTTON_DISTANCE * (R - 1) / 2,
-                        INTRINSIC_H / 2 + LEVEL_BUTTON_DISTANCE * (R - 1) / 2,
-                        r / (R - 1)
-                    ),
-                    LEVEL_BUTTON_S,
-                    LEVEL_BUTTON_S,
-                    () => SceneManager.fadeToScene(Game, levelNum),
-                    'CENTER'
+                    () => { SceneManager.fadeToScene(Game, levelNum); },
+                    '' + levelNum
                 ));
             }
         }

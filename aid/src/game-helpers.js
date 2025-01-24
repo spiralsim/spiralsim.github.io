@@ -162,18 +162,19 @@ class Trampoline extends Entity {
     }
 }
 class Text extends Entity {
-    constructor(txt, x, y, w) {
-        super(x, y, w || textWidth(txt), 15);
+    static TEXT_WIDTH = 540;
+
+    constructor(txt, x, y) {
+        super(x, y, Text.TEXT_WIDTH, 15);
         textSize(15);
         this.txt = txt;
-        this.textW = w;
     }
 
     draw() {
         fill.apply(null, LEVELS_DATA[curLevel - 1].textCol);
         textSize(15);
         textAlign(CENTER, TOP);
-        text(this.txt, this.pos.x - (this.textW ? this.w / 2 : 0), this.pos.y, this.textW);
+        text(this.txt, this.pos.x - Text.TEXT_WIDTH / 2, this.pos.y, Text.TEXT_WIDTH);
     }
 }
 class Item extends Entity {
@@ -183,13 +184,11 @@ class Item extends Entity {
     }
 
     onCollision() {
-        collectItem(this.name);
+        // Fills first empty inventory slot with a copy of this item
+        inventory[inventory.indexOf(null)] = new Item(0, 0, this.name);
         this.deleteMe = true;
     }
 }
-function collectItem(item) {
-    inventory[inventory.indexOf(null)] = item;
-};
 class Numeral extends Item {
     draw(pos = this.pos) {
         fill(255, 192);

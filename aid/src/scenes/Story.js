@@ -3,35 +3,25 @@ class Story extends Depth1Scene {
 
     constructor() {
         super();
-        this.buttons.push(new Button(
-            '←',
-            0,
-            BOTTOM_BUTTONS_Y,
-            60,
-            BOTTOM_BUTTONS_H,
+        this.buttons.push(new TransitionButton(
+            new Rect(0, INTRINSIC_H, 60, BOTTOM_BUTTONS_H, 'LEFT', 'BOTTOM'),
             () => {
                 if (this.page > 1) SceneManager.fadeToScene(Story, this.page - 1);
-            }
+            },
+            '←'
         ));
-        this.buttons.push(new Button(
-            '→',
-            60,
-            BOTTOM_BUTTONS_Y,
-            60,
-            BOTTOM_BUTTONS_H,
+        this.buttons.push(new TransitionButton(
+            new Rect(60, INTRINSIC_H, 60, BOTTOM_BUTTONS_H, 'LEFT', 'BOTTOM'),
             () => {
                 if (this.page < 6) SceneManager.fadeToScene(Story, this.page + 1);
                 else SceneManager.fadeToScene(Game, 1);
-            }
+            },
+            '→'
         ));
-        this.buttons.push(new Button(
-            'Skip to Game',
-            INTRINSIC_W,
-            BOTTOM_BUTTONS_Y,
-            180,
-            BOTTOM_BUTTONS_H,
+        this.buttons.push(new TransitionButton(
+            new Rect(INTRINSIC_W, INTRINSIC_H, 180, BOTTOM_BUTTONS_H, 'RIGHT', 'BOTTOM'),
             () => { SceneManager.fadeToScene(Game, 1); },
-            'RIGHT'
+            'Skip to Game'
         ));
     }
 

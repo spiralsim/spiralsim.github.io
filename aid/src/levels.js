@@ -8,7 +8,7 @@ const LEVELS_DATA = [
 			["Spawn", 210, 330],
 			["Finish", 720, 330, 30, 30],
 			["Block", 420, 330, 120, 30],
-			["Text", "Use the arrow keys to move. Your goal in each level is to reach the finish portal.\n\nEach time you reach the portal, you climb a little closer to infinity! However, nobody knows what waits at the end, for nobody has been there.", 480, 180, 540]
+			["Text", "Use the arrow keys to move. Your goal in each level is to reach the finish portal.\n\nEach time you reach the portal, you climb a little closer to infinity! However, nobody knows what waits at the end, for nobody has been there.", 480, 180]
 		],
 		"blockCol": [128, 64, 0],
 		"textCol": [255]
@@ -197,7 +197,7 @@ const LEVELS_DATA = [
 			["Block", 660, 180, 120, 30],
 			["Finish", 750, 150, 30, 30],
 			
-			["Text", "Put it all together now!", 480, 90, 540]
+			["Text", "Put it all together now!", 480, 90]
 		],
 		"blockCol": [128, 64, 128],
 		"textCol": [255],

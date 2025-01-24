@@ -5,14 +5,17 @@ class Home extends Scene {
         const BUTTON_NEXT_SCENES = [Story, Levels, About];
         this.buttons = [];
         for (let i = 0; i < 3; i++) {
-            this.buttons.push(new Button(
-                BUTTON_LABELS[i],
-                INTRINSIC_W / 2,
-                INTRINSIC_H * (0.4 + 0.2 * i),
-                INTRINSIC_W * 3 / 4,
-                INTRINSIC_H * 0.15,
+            this.buttons.push(new TransitionButton(
+                new Rect(
+                    INTRINSIC_W / 2,
+                    INTRINSIC_H * (0.4 + 0.2 * i),
+                    INTRINSIC_W * 3 / 4,
+                    INTRINSIC_H * 0.15,
+                    'CENTER',
+                    'CENTER'
+                ),
                 () => { SceneManager.fadeToScene(BUTTON_NEXT_SCENES[i]); },
-                'CENTER'
+                BUTTON_LABELS[i]
             ));
         }
     }
