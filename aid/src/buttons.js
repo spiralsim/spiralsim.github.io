@@ -19,7 +19,7 @@ class Rect {
 		this.h = h;
 	}
 
-	get collideMouseCoord() {
+	get isHovered() {
 		return (
 			mouseCoordX > this.x &&
 			mouseCoordX < this.x + this.w &&
@@ -49,8 +49,12 @@ class Button {
 	onNoHover() {
 		this.fade = max(this.fade - this.fadeRate, 0);
 	}
+	centerText() {
+		textAlign(CENTER, CENTER);
+		text(this.txt, this.r.x + this.r.w / 2, this.r.y + this.r.h / 2);
+	}
 	run() {
-		if (this.r.collideMouseCoord) this.onHover();
+		if (this.r.isHovered) this.onHover();
 		else this.onNoHover();
 	}
 }
@@ -76,65 +80,12 @@ class TransitionButton extends Button {
 	}
 }
 
-const INVENTORY_CAPACITY = 9;
-const SLOT_SIZE = 30;
 function gridColToX(idx, numCols, colDistance) {
 	return lerp(
 		INTRINSIC_W / 2 - colDistance * (numCols - 1) / 2,
 		INTRINSIC_W / 2 + colDistance * (numCols - 1) / 2,
 		idx / (numCols - 1)
 	);
-}
-class InventoryButton extends Button {
-	item = null;
-
-	constructor(index) {
-		super(
-			new Rect(
-				gridColToX(index, INVENTORY_CAPACITY, SLOT_SIZE),
-				INTRINSIC_H - SLOT_SIZE / 2,
-				SLOT_SIZE,
-				SLOT_SIZE,
-				'CENTER',
-				'CENTER'
-			),
-			() => {}
-		);
-	}
-
-	setItem(item) {
-		this.item = item;
-	}
-	run() {
-		super.run();
-		fill(lerp(255, 192, this.fade), 192);
-		strokeWeight(2);
-		stroke(0);
-		square(this.r.x, this.r.y, SLOT_SIZE);
-		if (this.item) this.item.draw(createVector(this.r.x, this.r.y));
-	}
-}
-
-class CloseManualButton extends Button {
-	static S = 30;
-
-	constructor(pos) {
-		super(
-			new Rect(pos.x, pos.y, CloseManualButton.S, CloseManualButton.S),
-			() => { showingManual = false; }
-		);
-	}
-
-	run() {
-		super.run();
-		fill(lerp(255, 128, this.fade), 192);
-		circle(this.r.x + this.r.w / 2, this.r.y + this.r.h / 2, this.r.w);
-		noStroke();
-		textSize(30);
-		fill(0);
-		textAlign(CENTER, CENTER)
-        text('×', this.r.x + this.r.w / 2, this.r.y + this.r.h / 2);
-	}
 }
 
 const BOTTOM_BUTTONS_H = 60;

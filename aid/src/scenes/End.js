@@ -15,17 +15,17 @@ class End extends Scene {
 			imageMode(CENTER);
 			CZy = 360 + (CZy - 360) * 0.99;
 			image(images.characters[0], 720, CZy, PLAYER_H * CAPTAIN_ZERO_AR, PLAYER_H);
-			scaleRing(ringX, 360, 600, LEVELS.length);
+			drawScaleRing(ringX, 360, 600, LEVELS.length);
 		// Animation phase 2: Zoom out to infinity
 		} else if (playerScale < 1000) {
 			playerScale *= 1.01;
 			for (let i = floor(playerScale - 10); i <= playerScale; i++) {
-				scaleRing(ringX, 360, 10 ** (i - playerScale) * 600, i);
+				drawScaleRing(ringX, 360, 10 ** (i - playerScale) * 600, i);
 			}
 			image(images.characters[0], 720, 360, PLAYER_H * CAPTAIN_ZERO_AR, PLAYER_H);
 		// Animation phase 3: Infinitus fades in and fights Captain Zero
 		} else if (!finishedAnim) {
-			if (fightPos) scaleRing(ringX, 360, 600, '∞');
+			if (fightPos) drawScaleRing(ringX, 360, 600, '∞');
 			// Fade in
 			if (infinitusFade < 255) {
 				infinitusFade += 255 / 360;

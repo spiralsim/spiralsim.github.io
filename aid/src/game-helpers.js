@@ -3,6 +3,7 @@ class Entity {
         this.pos = createVector(x, y);
         this.w = w;
         this.h = h;
+        this.r = new Rect(x, y, w, h);
         this.center = createVector(this.pos.x + this.w / 2, this.pos.y + this.h / 2);
         this.deleteMe = false;
     }
@@ -80,12 +81,18 @@ class Player extends Entity {
     }
 }
 class Block extends Entity {
+    selected = false;
+
     constructor(x, y, w, h, userMade) {
         super(x, y, w, h);
-        this.selected = false;
         this.userMade = userMade;
     }
 
+    toggle() {
+        this.selected = !this.selected;
+        if (this.selected) selBlocks.add(this);
+        else selBlocks.delete(this);
+    }
     draw() {
         fill(...LEVELS_DATA[curLevel - 1].blockCol);
         if (this.selected) fill(128 * (1 + sin(frameCount / 10)), 128 * (1 + sin(frameCount / 10)), 255);
@@ -96,6 +103,10 @@ class Block extends Entity {
             strokeWeight(1);
             for (let x = this.pos.x; x <= this.pos.x + this.w; x += 15) line(x, this.pos.y, x, this.pos.y + this.h);
             for (let y = this.pos.y; y <= this.pos.y + this.h; y += 15) line(this.pos.x, y, this.pos.x + this.w, y);
+        }
+        if (hasMachine && this.r.isHovered) {
+            cursor(HAND);
+            if (mouseIsReleased) this.toggle();
         }
     }
     onCollision() {
@@ -324,7 +335,7 @@ class Machine extends Item {
     }
 }
 
-function scaleRing(x, y, sz, _scale) {
+function drawScaleRing(x, y, sz, _scale) {
     stroke(255, 64);
     noFill();
     strokeWeight(sz / 20);
