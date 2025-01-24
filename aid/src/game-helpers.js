@@ -176,99 +176,77 @@ class Text extends Entity {
         text(this.txt, this.pos.x - (this.textW ? this.w / 2 : 0), this.pos.y, this.textW);
     }
 }
-const fillNull = (arr, val) => {
-    arr[arr.indexOf(null)] = val;
+class Item extends Entity {
+    constructor(x, y, name) {
+        super(x, y, CELL_SIZE, CELL_SIZE);
+        this.name = name;
+    }
+
+    onCollision() {
+        collectItem(this.name);
+        this.deleteMe = true;
+    }
+}
+function collectItem(item) {
+    inventory[inventory.indexOf(null)] = item;
 };
-function drawNumber(name, pos, w, h, defColor) {
-    fill(255, 192);
-    noStroke();
-    circle(pos.x + w / 2, pos.y + h / 2, w);
-    colorMode(HSB);
-    if (parseInt(name)) fill(360 * (parseInt(name) / 10), 100, 100);
-    else fill(defColor);
-    textSize(w);
-    textAlign(CENTER, CENTER);
-    noStroke();
-    text(name, pos.x + w / 2, pos.y + h / 2);
-    colorMode(RGB);
-}
-class _Number extends Entity {
-    constructor(x, y, name) {
-        super(x, y, CELL_SIZE, CELL_SIZE);
-        this.name = name;
-    }
-
+class Numeral extends Item {
     draw(pos = this.pos) {
-        drawNumber(this.name, pos, this.w, this.h, 255);
-    }
-    onCollision() {
-        fillNull(numbers, this.name);
-        this.deleteMe = true;
+        fill(255, 192);
+        noStroke();
+        circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        colorMode(HSB);
+        if (parseInt(this.name)) fill(360 * (parseInt(this.name) / 10), 100, 100);
+        else fill(255);
+        textSize(this.w);
+        textAlign(CENTER, CENTER);
+        noStroke();
+        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
+        colorMode(RGB);
     }
 }
-function drawOperator(name, pos, w, h) {
-    fill(255, 192);
-    noStroke();
-    circle(pos.x + w / 2, pos.y + h / 2, w);
-    fill(64);
-    textSize(w);
-    textAlign(CENTER, CENTER);
-    noStroke();
-    text(name, pos.x + w / 2, pos.y + h / 2);
-}
-class Operator extends Entity {
-    constructor(x, y, name) {
-        super(x, y, CELL_SIZE, CELL_SIZE);
-        this.name = name;
-    }
-
+class Operator extends Item {
     draw(pos = this.pos) {
-        drawOperator(this.name, pos, this.w, this.h);
-    }
-    onCollision() {
-        fillNull(operators, this.name);
-        this.deleteMe = true;
+        fill(255, 192);
+        noStroke();
+        circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        fill(64);
+        textSize(this.w);
+        textAlign(CENTER, CENTER);
+        noStroke();
+        text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
     }
 }
-function drawMachine(pos, w, h) {
-    strokeWeight(1);
-    push();
-    translate(pos.x + w / 2, pos.y + h / 2);
-    noFill();
-    stroke(0, 0, 255, 128);
-    for (let i = 0; i < 6; i++) {
-        rotate(PI / 6);
-        ellipse(0, 0, w * sin(frameCount / 10 + i), h / 2 * sin(frameCount / 10 + i));
-    }
-    fill(255, 128);
-    stroke(0);
-    rectMode(CENTER);
-    rotate(frameCount / 20);
-    rect(0, 0, w * 2 / 3, h * 2 / 3);
-    rotate(-frameCount / 10);
-    rect(0, 0, w * 2 / 3, h * 2 / 3);
-    // Equals sign
-    noStroke();
-    fill(0);
-    textAlign(CENTER, CENTER);
-    rect(0, -h / 12, w * 1 / 3, h / 12);
-    rect(0, h / 12, w * 1 / 3, h / 12);
-    rectMode(CORNER);
-    pop();
-}
-class Machine extends Entity {
-    constructor(x, y) {
-        super(x, y, CELL_SIZE, CELL_SIZE);
-    }
-
-    draw() {
-        drawMachine(this.pos, this.w, this.h);
+class Machine extends Item {
+    draw(pos = this.pos) {
+        strokeWeight(1);
+        push();
+        translate(pos.x + this.w / 2, pos.y + this.h / 2);
+        noFill();
+        stroke(0, 0, 255, 128);
+        for (let i = 0; i < 6; i++) {
+            rotate(PI / 6);
+            ellipse(0, 0, this.w * sin(frameCount / 10 + i), this.h / 2 * sin(frameCount / 10 + i));
+        }
+        fill(255, 128);
+        stroke(0);
+        rectMode(CENTER);
+        rotate(frameCount / 20);
+        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
+        rotate(-frameCount / 10);
+        rect(0, 0, this.w * 2 / 3, this.h * 2 / 3);
+        // Equals sign
+        noStroke();
+        fill(0);
+        textAlign(CENTER, CENTER);
+        rect(0, -this.h / 12, this.w * 1 / 3, this.h / 12);
+        rect(0, this.h / 12, this.w * 1 / 3, this.h / 12);
+        rectMode(CORNER);
+        pop();
     }
     onCollision() {
         hasMachine = true;
-        alreadyFound.push([this.pos, curLevel]);
         showingExplanation = true;
-        toolbarImg = get(720, 0, 240, 960);
         this.deleteMe = true;
     }
 }

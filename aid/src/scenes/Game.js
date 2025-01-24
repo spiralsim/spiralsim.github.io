@@ -114,10 +114,10 @@ class Game extends Scene {
 //             }
 //         }
 
-        // Toolbar
-        fill(0);
-        textAlign(CENTER, TOP);
-        textSize(18);
+        // // Toolbar
+        // fill(0);
+        // textAlign(CENTER, TOP);
+        // textSize(18);
         // // Numbers and Operators
         // strokeWeight(2);
         // var entityArr = [numbers, operators][n], entityDrawFunc = [drawNumber, drawOperator][n];

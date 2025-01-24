@@ -1,4 +1,4 @@
-var ringX = 360, CZy, gameFade = 255, toolbarImg, infinitusFade = 0, fightPos = 240, explosionSize = 0, finishedAnim = false, endFade = 0;
+var ringX = 360, CZy, gameFade = 255, infinitusFade = 0, fightPos = 240, explosionSize = 0, finishedAnim = false, endFade = 0;
 
 class End extends Scene {
     draw() {
@@ -10,7 +10,6 @@ class End extends Scene {
 			imageMode(CORNER);
 			tint(255, gameFade);
 			image(images.backgrounds[LEVELS.length - 1], 0, 0);
-			image(toolbarImg, 720, 0);
 			tint(255, 255);
 			ringX += 2;
 			imageMode(CENTER);
