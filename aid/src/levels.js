@@ -84,11 +84,13 @@ const LEVELS_DATA = [
 			["Trampoline", 430, 600, 10, 30],
 			["Operator", 420, 540, "^"],
 
-			["Block", 420, 420, 30, 30],
-			["Block", 450, 450, 30, 30],
+			["Block", 420, 420, 60, 30],
+			["Operator", 450, 390, "("],
+			["Block", 450, 450, 30, 60],
 			["Block", 480, 480, 60, 30],
 			["Numeral", 480, 450, "7"],
 			["Block", 510, 450, 60, 30],
+			["Operator", 510, 420, ")"],
 			["Block", 540, 420, 30, 30],
 			["Block", 570, 360, 210, 30],
 			["Operator", 660, 330, "-"],
@@ -96,8 +98,7 @@ const LEVELS_DATA = [
 
 			["Block", 720, 240, 30, 30],
 			["Block", 150, 240, 30, 30],
-			["Finish", 240, 120, 30, 30],
-			["Text", "Remember to be creative and use your resources.", 480, 90]
+			["Finish", 240, 120, 30, 30]
 		],
 		"blockCol": [255],
 		"textCol": [255],
@@ -121,13 +122,18 @@ const LEVELS_DATA = [
 			["Trampoline", 750, 470, 30, 10],
 
 			["Block", 390, 240, 30, 60],
-			["Cannon", 360, 270],
+			// ["Cannon", 360, 270],
 			["Block", 420, 270, 330, 30],
+			["Block", 510, 300, 30, 90],
 			["Block", 540, 360, 30, 30],
+			["Cannon", 540, 300],
+			["Cannon", 570, 300],
 			["Cannon", 600, 300],
 			["Cannon", 630, 300],
 			["Cannon", 660, 300],
 			["Cannon", 690, 300],
+			["Cannon", 540, 330],
+			["Cannon", 570, 330],
 			["Cannon", 600, 330],
 			["Cannon", 630, 330],
 			["Cannon", 660, 330],
@@ -136,7 +142,7 @@ const LEVELS_DATA = [
 			["Block", 720, 300, 30, 60],
 			["Finish", 420, 240, 30, 30],
 			
-			["Text", "This is the cannon, the last object type you'll see.", 480, 150]
+			["Text", "Dodge bullets from cannons", 480, 150]
 		],
 		"blockCol": [255, 128, 0],
 		"textCol": [255],

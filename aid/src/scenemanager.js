@@ -64,10 +64,15 @@ class SceneManager {
     // Optionally you can send arguments to the scene
     // Arguments will be retrieved in the scene via .sceneArgs property
     static fadeToScene(sceneClass, sceneArgs) {
+        if (SceneManager.nextScene) return; // Prevents restarting fades in the middle of a fade
         SceneManager.nextScene = SceneManager.findScene(sceneClass) ?? SceneManager.addScene(sceneClass);
         SceneManager.nextSceneArgs = sceneArgs;
         SceneManager.fade = 0;
         SceneManager.fadeDelta = SCENE_FADE_RATE;
+    }
+
+    static reenter() {
+        SceneManager.scene.enter();
     }
 
     // This is the SceneManager .draw() method

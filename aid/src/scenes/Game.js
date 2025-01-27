@@ -16,7 +16,7 @@ var expression, expressionMsg;
 var machineButtons, fillButton;
 
 var hasMachine;
-var showingManual, filling, fillSize, selBlocks;
+var showingManual, filling, fillSize, selectedBlocks;
 var spawnPos, playerScale;
 
 if (false) { //devmode
@@ -26,7 +26,8 @@ if (false) { //devmode
     hasMachine = true;
 }
 
-const NUM_SLOTS = 9, SLOT_SIZE = 30, NUM_TOOLBAR_ROWS = 2;
+const NUM_SLOTS = 9, SLOT_SIZE = CELL_SIZE, NUM_TOOLBAR_ROWS = 2;
+const TOOLBAR_TEXT_SIZE = SLOT_SIZE / 2;
 class ToolbarButton extends Button {
     isSelected = false;
 
@@ -55,7 +56,7 @@ class ToolbarButton extends Button {
 		square(this.r.x, this.r.y, this.r.w);
         fill(255);
         noStroke();
-        textSize(SLOT_SIZE / 2);
+        textSize(TOOLBAR_TEXT_SIZE);
         this.centerText();
 	}
 }
@@ -88,7 +89,7 @@ class FillButton extends Button {
 		square(this.r.x, this.r.y, this.r.w);
         fill(255);
         noStroke();
-        textSize(SLOT_SIZE / 2);
+        textSize(TOOLBAR_TEXT_SIZE);
         this.centerText();
 	}
 }
@@ -101,7 +102,7 @@ class InventoryButton extends ToolbarButton {
             1,
             index,
             () => {
-                if (selBlocks.length < 2 || this.isSelected) return;
+                if (selectedBlocks.size < 2 || this.isSelected) return;
                 this.isSelected = true;
                 expression += this.item.name;
                 selectedSlots.push(this);
@@ -175,6 +176,10 @@ Note that the two blocks must align exactly:`, 150, 180);
     closeManualButton.run();
 }
 
+function resetLevel() {
+    SceneManager.fadeToScene(Game, curLevel);
+};
+
 class Game extends Scene {
     hasTintedBackground = false;
 
@@ -189,7 +194,7 @@ class Game extends Scene {
                 'LEFT',
                 'BOTTOM'
             ),
-            () => { SceneManager.fadeToScene(Game, curLevel); },
+            () => { resetLevel(); },
             'Reset Level'
         ));
         this.buttons.push(new HomeButton(true));
@@ -232,7 +237,7 @@ class Game extends Scene {
         hasMachine = curLevel > LEVEL_WITH_MACHINE;
         expression = '';
         selectedSlots = [];
-        selBlocks = new Set();
+        selectedBlocks = new Set();
         showingManual = false;
         filling = false;
         playerScale = nxtLevel;
@@ -251,7 +256,7 @@ class Game extends Scene {
         if (player.jumping) player.vel.y += 0.15;
         player.jumping = true; // By default, assume the player is in the air and should be accelerated by gravity
         // If the player falls off the map, restart
-        if (player.pos.x < 0 || player.pos.x > INTRINSIC_W || player.pos.y > INTRINSIC_H) this.enter();
+        if (player.pos.x < 0 || player.pos.x > INTRINSIC_W || player.pos.y > INTRINSIC_H) resetLevel();
 
         // Game drawing
         drawScaleRing(INTRINSIC_W / 2, INTRINSIC_H / 2, 600, playerScale);
@@ -263,33 +268,17 @@ class Game extends Scene {
         const toolbarX = inventory[0].r.x;
         const toolbarY = INTRINSIC_H - CELL_SIZE * 2;
 
-        // Inventory row
-        if (inventory.some(b => b.item != null))
-            inventory.forEach(b => { b.run(); });
+        // Inventory row (if the inventory is empty, the toolbar is hidden)
+        if (inventory.every(b => !b.item)) return;
+        inventory.forEach(b => { b.run(); });
         
         // Machine row
         if (hasMachine) {
-            // Expression
-            stroke(0);
-            fill(255, 192);
-            rect(toolbarX, toolbarY, SLOT_SIZE * (NUM_SLOTS - machineButtons.length), SLOT_SIZE);
-            noStroke();
-            textAlign(LEFT, CENTER);
-            if (selBlocks.length < 2) {
-                fill(128);
-                expressionMsg = 'Select blocks...';
-            } else {
-                fill(0);
-                expressionMsg = expression;
-            }
-            text(expressionMsg, toolbarX + 5, toolbarY + SLOT_SIZE / 2);
-            // Buttons
-            machineButtons.forEach(b => b.run());
-
             // Filling gap
-            if (selBlocks.length == 2) {
-                var [a, b] = Array.from(selBlocks);
-                var newBlock = null, gapSize;
+            var gapSize;
+            if (selectedBlocks.size == 2) {
+                var [a, b] = Array.from(selectedBlocks);
+                var newBlock = null;
                 if (a.pos.x == b.pos.x && a.w == b.w) {
                     // Filling vertically
                     if (a.pos.y > b.pos.y) [a, b] = [b, a];
@@ -312,15 +301,42 @@ class Game extends Scene {
                             else throw Error('Output is non-real');
                         }
                         if (math.round(evaluation) != evaluation) throw Error('Output is non-integer');
-                        if (evaluation * CELL_SIZE == gapSize) {
+                        if (evaluation == gapSize / CELL_SIZE) {
                             entities.push(newBlock);
                             expression = '';
-                            // selectedSlots = [];
+                            selectedSlots.forEach(slot => {
+                                slot.item.deleteMe = true;
+                                slot.isSelected = false;
+                                slot.setItem(null);
+                            });
+                            selectedSlots = [];
                             a.toggle(), b.toggle();
                         }
                     } catch (err) {}
                 }
             }
+
+            // Expression
+            stroke(0);
+            fill(255, 192);
+            strokeWeight(2);
+            rect(toolbarX, toolbarY, SLOT_SIZE * (NUM_SLOTS - machineButtons.length), SLOT_SIZE);
+            noStroke();
+            textAlign(LEFT, CENTER);
+            textSize(TOOLBAR_TEXT_SIZE);
+            if (selectedBlocks.size < 2) {
+                fill(128);
+                expressionMsg = 'Select blocks...';
+            } else if (!expression) {
+                fill(128);
+                expressionMsg = `Required value: ${gapSize / CELL_SIZE}`;
+            } else {
+                fill(0);
+                expressionMsg = expression;
+            }
+            text(expressionMsg, toolbarX + 5, toolbarY + TOOLBAR_TEXT_SIZE);
+            // Buttons
+            machineButtons.forEach(b => b.run());
         }
     }
 }

@@ -50,7 +50,13 @@ class Player extends Entity {
         super(0, 0, PLAYER_W, PLAYER_H);
         this.spawnPos = spawnPos.copy();
         this.spawnPos.x += (CELL_SIZE - this.w) / 2;
-        this.spawn();
+        this.pos = this.spawnPos.copy();
+        this.prevPos = this.spawnPos.copy();
+        this.vel = createVector();
+        this.jumping = false;
+        entities.forEach(e => {
+            if (e instanceof Cannon) e.bullets = [];
+        });
     }
 
     draw() {
@@ -70,15 +76,6 @@ class Player extends Entity {
     freeze() {
         this.vel = createVector();
     }
-    spawn() {
-        this.pos = this.spawnPos.copy();
-        this.prevPos = this.spawnPos.copy();
-        this.vel = createVector();
-        this.jumping = false;
-        entities.forEach(e => {
-            if (e instanceof Cannon) e.bullets = [];
-        });
-    }
 }
 class Block extends Entity {
     selected = false;
@@ -90,8 +87,8 @@ class Block extends Entity {
 
     toggle() {
         this.selected = !this.selected;
-        if (this.selected) selBlocks.add(this);
-        else selBlocks.delete(this);
+        if (this.selected) selectedBlocks.add(this);
+        else selectedBlocks.delete(this);
     }
     draw() {
         fill(...LEVELS_DATA[curLevel - 1].blockCol);
@@ -138,8 +135,6 @@ class Finish extends Entity {
         rect(this.pos.x, this.pos.y, this.w, this.h);
     }
     onCollision() {
-        if (this.isUsed) return;
-        this.isUsed = true;
         SceneManager.fadeToScene(Game, curLevel + 1);
     }
 }
@@ -154,7 +149,7 @@ class Lava extends Entity {
         rect(this.pos.x, this.pos.y, this.w, this.h);
     }
     onCollision() {
-        player.spawn();
+        resetLevel();
     }
 }
 class Trampoline extends Entity {
@@ -237,7 +232,7 @@ class Cannon extends Entity {
         this.bullets.forEach(b => {
             b.pos.add(b.vel);
             b.vel.add(p5.Vector.random2D().div(100));
-            if (player.checkCollision(b)) player.spawn();
+            if (player.checkCollision(b)) resetLevel();
             entities.forEach(e => {
                 if (e instanceof Block && e.checkCollision(b)) b.deleteMe = true;
                 if (e instanceof Trampoline && e.checkCollision(b)) {
@@ -246,7 +241,7 @@ class Cannon extends Entity {
                 }
             });
             if (b.age++ > 1800) b.deleteMe = true;
-            if (b.pos.x < 0 || b.pos.x > 720 || b.pos.y < 0 || b.pos.y > 720) b.deleteMe = true;
+            if (b.pos.x < 0 || b.pos.x > INTRINSIC_W || b.pos.y < 0 || b.pos.y > INTRINSIC_H) b.deleteMe = true;
         });
         this.bullets = this.bullets.filter(b => !b.deleteMe);
     }
