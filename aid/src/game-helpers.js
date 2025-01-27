@@ -285,7 +285,7 @@ class Numeral extends Item {
         colorMode(HSB);
         if (parseInt(this.name)) fill(360 * (parseInt(this.name) / 10), 100, 80);
         else fill(255);
-        textSize(this.w);
+        textSize(CELL_SIZE * 2 / 3);
         textAlign(CENTER, CENTER);
         stroke(255);
         strokeWeight(1);
@@ -298,7 +298,7 @@ class Operator extends Item {
     draw(pos = this.pos) {
         textFont(ITEM_FONT_NAME);
         fill(64);
-        textSize(this.w);
+        textSize(CELL_SIZE * 2 / 3);
         textAlign(CENTER, CENTER);
         stroke(255);
         strokeWeight(1);
