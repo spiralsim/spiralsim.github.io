@@ -126,7 +126,7 @@ class SceneManager {
                 SceneManager.nextScene = null;
             } else SceneManager.fade += SCENE_FADE_RATE;
         } else if (SceneManager.fade > 0) SceneManager.fade -= SCENE_FADE_RATE;
-        background(255, 255, 255, SceneManager.fade);
+        background(SceneManager.nextScene instanceof End ? 0 : 255, SceneManager.fade);
 
         mouseIsReleased = !mouseIsPressed && pMouseIsPressed;
         pMouseIsPressed = mouseIsPressed;

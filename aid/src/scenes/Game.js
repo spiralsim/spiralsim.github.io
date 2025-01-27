@@ -16,15 +16,8 @@ var expression, expressionMsg;
 var machineButtons, fillButton;
 
 var hasMachine;
-var showingManual, filling, fillSize, selectedBlocks;
-var spawnPos, playerScale;
-
-if (false) { //devmode
-    page = "Game";
-    fadeTo = null;
-    curLevel = 5;
-    hasMachine = true;
-}
+var showingManual, gapSize, selectedBlocks;
+var spawnPos, scaleExponent;
 
 const NUM_SLOTS = 9, SLOT_SIZE = CELL_SIZE, NUM_TOOLBAR_ROWS = 2;
 const TOOLBAR_TEXT_SIZE = SLOT_SIZE / 2;
@@ -145,13 +138,15 @@ class CloseManualButton extends Button {
 const closeManualButton = new CloseManualButton({x: 800, y: 130});
 
 function drawManual() {
+    noStroke();
     fill(255);
     rect(120, 120, 720, 480, 20);
     fill(0);
     textSize(36);
+    textAlign(CENTER, TOP);
     text("Filling Machine Manual", INTRINSIC_W / 2, 140);
+    textAlign(LEFT, TOP);
     textSize(24);
-    textAlign(LEFT);
     text(`1
 
 2
@@ -160,25 +155,108 @@ function drawManual() {
 
 
 
-Note that the two blocks must align exactly:`, 150, 180);
+Note that the two blocks must align exactly:
+
+
+
+
+Reread this manual at any time by pressing [?] on the toolbar.`, 150, 180);
     text(`You can fill the gap between any two aligned blocks. To do so, select the blocks by pressing them in any order.
     To cancel the fill, deselect one of the blocks.
     Type a mathematical expression by pressing on numerals and operators in your inventory. When the expression evaluates to the required distance, the gap will be filled by a new block.`, 170, 180, 640);
-    rect(160, 480, 20, 40);
-    rect(160, 540, 20, 40);
-    text('✓', 200, 520);
-    rect(380, 480, 20, 40);
-    rect(400, 540, 20, 40);
-    text('×', 440, 520);
-    rect(640, 480, 20, 40);
-    rect(640, 540, 10, 40);
-    text('×', 680, 520);
+    rect(160, 450, 20, 40);
+    rect(160, 510, 20, 40);
+    text('✓', 200, 490);
+    rect(380, 450, 20, 40);
+    rect(400, 510, 20, 40);
+    text('×', 440, 490);
+    rect(640, 450, 20, 40);
+    rect(640, 510, 10, 40);
+    text('×', 680, 490);
     closeManualButton.run();
+}
+
+function drawExpressionField() {
+    const toolbarX = inventory[0].r.x;
+    const toolbarY = INTRINSIC_H - CELL_SIZE * 2;
+    stroke(0);
+    fill(255, 192);
+    strokeWeight(2);
+    rect(toolbarX, toolbarY, SLOT_SIZE * (NUM_SLOTS - machineButtons.length), SLOT_SIZE);
+    noStroke();
+    textAlign(LEFT, CENTER);
+    textSize(TOOLBAR_TEXT_SIZE);
+    if (selectedBlocks.size < 2) {
+        fill(128);
+        expressionMsg = 'Select blocks...';
+    } else if (!expression) {
+        fill(128);
+        expressionMsg = `Required value: ${gapSize / CELL_SIZE}`;
+    } else {
+        fill(0);
+        expressionMsg = expression;
+    }
+    text(expressionMsg, toolbarX + 5, toolbarY + TOOLBAR_TEXT_SIZE);
 }
 
 function resetLevel() {
     SceneManager.fadeToScene(Game, curLevel);
 };
+
+function handlePlayerMovement() {
+    if (keyIsDown(LEFT_ARROW)) player.vel.x = -2;
+    else if (keyIsDown(RIGHT_ARROW)) player.vel.x = 2;
+    else player.vel.x *= 0.5;
+    if (abs(player.vel.x) < 0.1) player.vel.x = 0;
+    if (keyIsDown(UP_ARROW) && !player.jumping) {
+        player.vel.y = -5;
+        player.jumping = true;
+    }
+    if (player.jumping) player.vel.y += 0.15;
+    player.jumping = true; // By default, assume the player is in the air and should be accelerated by gravity
+    // If the player falls off the map, restart
+    if (player.pos.x < 0 || player.pos.x > INTRINSIC_W || player.pos.y > INTRINSIC_H) resetLevel();
+}
+
+function attemptFill() {
+    var [a, b] = Array.from(selectedBlocks);
+    var newBlock = null;
+    if (a.pos.x == b.pos.x && a.w == b.w) {
+        // Filling vertically
+        if (a.pos.y > b.pos.y) [a, b] = [b, a];
+        const bottomY = a.pos.y + a.h;
+        gapSize = b.pos.y - bottomY;
+        newBlock = new Block(a.pos.x, bottomY, a.w, gapSize, true);
+    } else if (a.pos.y == b.pos.y && a.h == b.h) {
+        // Filling horizontally
+        if (a.pos.x > b.pos.x) [a, b] = [b, a];
+        const rightX = a.pos.x + a.w;
+        gapSize = b.pos.x - rightX;
+        newBlock = new Block(rightX, a.pos.y, gapSize, a.h, true);
+    } else a.toggle(), b.toggle(); // Misaligned
+    if (newBlock) {
+        var evaluation;
+        try {
+            evaluation = math.evaluate(expression.replace(/√/g, 'sqrt').replace(/π/g, 'pi'));
+            if (evaluation.im) {
+                if (Math.abs(evaluation.im) < 0.001) evaluation = evaluation.re; // Handles e^(iπ)
+                else throw Error('Output is non-real');
+            }
+            if (math.round(evaluation) != evaluation) throw Error('Output is non-integer');
+            if (evaluation == gapSize / CELL_SIZE) {
+                entities.push(newBlock);
+                expression = '';
+                selectedSlots.forEach(slot => {
+                    slot.item.deleteMe = true;
+                    slot.isSelected = false;
+                    slot.setItem(null);
+                });
+                selectedSlots = [];
+                a.toggle(), b.toggle();
+            }
+        } catch (err) {}
+    }
+}
 
 class Game extends Scene {
     hasTintedBackground = false;
@@ -239,34 +317,19 @@ class Game extends Scene {
         selectedSlots = [];
         selectedBlocks = new Set();
         showingManual = false;
-        filling = false;
-        playerScale = nxtLevel;
+        scaleExponent = nxtLevel;
     }
     
     draw() {
-        // Player physics
-        if (keyIsDown(LEFT_ARROW)) player.vel.x = -2;
-        else if (keyIsDown(RIGHT_ARROW)) player.vel.x = 2;
-        else player.vel.x *= 0.5;
-        if (abs(player.vel.x) < 0.1) player.vel.x = 0;
-        if (keyIsDown(UP_ARROW) && !player.jumping) {
-            player.vel.y = -5;
-            player.jumping = true;
-        }
-        if (player.jumping) player.vel.y += 0.15;
-        player.jumping = true; // By default, assume the player is in the air and should be accelerated by gravity
-        // If the player falls off the map, restart
-        if (player.pos.x < 0 || player.pos.x > INTRINSIC_W || player.pos.y > INTRINSIC_H) resetLevel();
+        handlePlayerMovement();
 
         // Game drawing
-        drawScaleRing(INTRINSIC_W / 2, INTRINSIC_H / 2, 600, playerScale);
+        drawScaleRing(scaleExponent);
         entities.forEach(e => e.run());
         entities = entities.filter(e => !e.deleteMe);
         if (showingManual) drawManual();
 
         // Toolbar
-        const toolbarX = inventory[0].r.x;
-        const toolbarY = INTRINSIC_H - CELL_SIZE * 2;
 
         // Inventory row (if the inventory is empty, the toolbar is hidden)
         if (inventory.every(b => !b.item)) return;
@@ -274,68 +337,8 @@ class Game extends Scene {
         
         // Machine row
         if (hasMachine) {
-            // Filling gap
-            var gapSize;
-            if (selectedBlocks.size == 2) {
-                var [a, b] = Array.from(selectedBlocks);
-                var newBlock = null;
-                if (a.pos.x == b.pos.x && a.w == b.w) {
-                    // Filling vertically
-                    if (a.pos.y > b.pos.y) [a, b] = [b, a];
-                    const bottomY = a.pos.y + a.h;
-                    gapSize = b.pos.y - bottomY;
-                    newBlock = new Block(a.pos.x, bottomY, a.w, gapSize, true);
-                } else if (a.pos.y == b.pos.y && a.h == b.h) {
-                    // Filling horizontally
-                    if (a.pos.x > b.pos.x) [a, b] = [b, a];
-                    const rightX = a.pos.x + a.w;
-                    gapSize = b.pos.x - rightX;
-                    newBlock = new Block(rightX, a.pos.y, gapSize, a.h, true);
-                } else a.toggle(), b.toggle(); // Misaligned
-                if (newBlock) {
-                    var evaluation;
-                    try {
-                        evaluation = math.evaluate(expression.replace(/√/g, 'sqrt').replace(/π/g, 'pi'));
-                        if (evaluation.im) {
-                            if (Math.abs(evaluation.im) < 0.001) evaluation = evaluation.re; // Handles e^(iπ)
-                            else throw Error('Output is non-real');
-                        }
-                        if (math.round(evaluation) != evaluation) throw Error('Output is non-integer');
-                        if (evaluation == gapSize / CELL_SIZE) {
-                            entities.push(newBlock);
-                            expression = '';
-                            selectedSlots.forEach(slot => {
-                                slot.item.deleteMe = true;
-                                slot.isSelected = false;
-                                slot.setItem(null);
-                            });
-                            selectedSlots = [];
-                            a.toggle(), b.toggle();
-                        }
-                    } catch (err) {}
-                }
-            }
-
-            // Expression
-            stroke(0);
-            fill(255, 192);
-            strokeWeight(2);
-            rect(toolbarX, toolbarY, SLOT_SIZE * (NUM_SLOTS - machineButtons.length), SLOT_SIZE);
-            noStroke();
-            textAlign(LEFT, CENTER);
-            textSize(TOOLBAR_TEXT_SIZE);
-            if (selectedBlocks.size < 2) {
-                fill(128);
-                expressionMsg = 'Select blocks...';
-            } else if (!expression) {
-                fill(128);
-                expressionMsg = `Required value: ${gapSize / CELL_SIZE}`;
-            } else {
-                fill(0);
-                expressionMsg = expression;
-            }
-            text(expressionMsg, toolbarX + 5, toolbarY + TOOLBAR_TEXT_SIZE);
-            // Buttons
+            if (selectedBlocks.size == 2) attemptFill();
+            drawExpressionField();
             machineButtons.forEach(b => b.run());
         }
     }

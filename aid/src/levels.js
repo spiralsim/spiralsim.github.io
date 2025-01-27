@@ -47,7 +47,7 @@ const LEVELS_DATA = [
 			["Text", "Trampolines are bouncy.", 480, 210]
 		],
 		"blockCol": [128],
-		"textCol": [0, 128, 0]
+		"textCol": [0, 255, 0]
 	},
 	{
 		"number": 4,
@@ -224,8 +224,8 @@ const LEVELS_DATA = [
 			["Operator", 390, 330, "+"],
 			["Numeral", 420, 330, "π"],
 			["Operator", 450, 330, "^"],
-			["Block", 720, 360, 60, 30],
-			["Finish", 750, 330, 30, 30]
+			["Block", 720, 360, 180, 30],
+			["Finish", INTRINSIC_W - 10, 0, 10, INTRINSIC_H]
 		],
 		"blockCol": [64],
 		"textCol": [255],

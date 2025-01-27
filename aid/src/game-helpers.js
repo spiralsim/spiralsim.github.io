@@ -45,6 +45,15 @@ class Entity {
     }
 }
 
+function drawCaptainZero(x, y = INTRINSIC_H / 2) {
+    imageMode(CENTER);
+    image(images.characters[0], x, y, PLAYER_W, PLAYER_H);
+}
+function drawInfinitus(x, y = INTRINSIC_H / 2) {
+    imageMode(CENTER);
+    image(images.characters[1], x, y, INFINITUS_W, INFINITUS_H);
+}
+
 class Player extends Entity {
     constructor() {
         super(0, 0, PLAYER_W, PLAYER_H);
@@ -135,7 +144,8 @@ class Finish extends Entity {
         rect(this.pos.x, this.pos.y, this.w, this.h);
     }
     onCollision() {
-        SceneManager.fadeToScene(Game, curLevel + 1);
+        if (curLevel < LEVELS_DATA.length) SceneManager.fadeToScene(Game, curLevel + 1);
+        else SceneManager.fadeToScene(End);
     }
 }
 class Lava extends Entity {
@@ -169,7 +179,7 @@ class Trampoline extends Entity {
     }
 }
 class Text extends Entity {
-    static TEXT_WIDTH = 540;
+    static TEXT_WIDTH = INTRINSIC_W * 9 / 16;
 
     constructor(txt, x, y) {
         super(x, y, Text.TEXT_WIDTH, 15);
@@ -181,6 +191,8 @@ class Text extends Entity {
         fill.apply(null, LEVELS_DATA[curLevel - 1].textCol);
         textSize(15);
         textAlign(CENTER, TOP);
+        stroke(0);
+        strokeWeight(2);
         text(this.txt, this.pos.x - Text.TEXT_WIDTH / 2, this.pos.y, Text.TEXT_WIDTH);
     }
 }
@@ -330,14 +342,14 @@ class Machine extends Item {
     }
 }
 
-function drawScaleRing(x, y, sz, _scale) {
-    stroke(255, 64);
+function drawScaleRing(exponent, d = INTRINSIC_H * 0.8, alpha = 64) {
+    stroke(255, alpha);
     noFill();
-    strokeWeight(sz / 20);
-    arc(x, y, sz, sz, PI * -1 / 3, PI * 4 / 3);
-    fill(255, 64);
+    strokeWeight(d / 20);
+    arc(INTRINSIC_W / 2, INTRINSIC_H / 2, d, d, PI * -1 / 3, PI * 4 / 3);
+    fill(255, alpha);
     noStroke();
-    textSize(sz / 8);
-    const szText = '10' + (_scale + '').split('').map(c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[parseInt(c)]).join('');
-    text((_scale == '∞' ? '∞' : szText) + ' m', x, y - sz / 2);
+    textSize(d / 8);
+    const szText = '10' + (exponent + '').split('').map(c => '⁰¹²³⁴⁵⁶⁷⁸⁹'[parseInt(c)]).join('');
+    text((exponent == '∞' ? '∞' : szText) + ' m', INTRINSIC_W / 2, INTRINSIC_H / 2 - d / 2);
 }
