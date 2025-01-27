@@ -144,7 +144,7 @@ function drawManual() {
     fill(0);
     textSize(36);
     textAlign(CENTER, TOP);
-    text("Filling Machine Manual", INTRINSIC_W / 2, 140);
+    text("A Marvelous Filling Machine!", INTRINSIC_W / 2, 140);
     textAlign(LEFT, TOP);
     textSize(24);
     text(`1
@@ -163,7 +163,7 @@ Note that the two blocks must align exactly:
 Reread this manual at any time by pressing [?] on the toolbar.`, 150, 180);
     text(`You can fill the gap between any two aligned blocks. To do so, select the blocks by pressing them in any order.
     To cancel the fill, deselect one of the blocks.
-    Type a mathematical expression by pressing on numerals and operators in your inventory. When the expression evaluates to the required distance, the gap will be filled by a new block.`, 170, 180, 640);
+    Type a mathematical expression by pressing on numerals and operators in your inventory (write √(x) instead of √x and x*y instead of xy.) When the expression evaluates to the required distance, the gap will be filled by a new block.`, 170, 180, 640);
     rect(160, 450, 20, 40);
     rect(160, 510, 20, 40);
     text('✓', 200, 490);

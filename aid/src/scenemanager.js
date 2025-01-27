@@ -106,10 +106,7 @@ class SceneManager {
             push();
             translate(extrinsicMainX, extrinsicMainY);
             scale(mainScaleFactor);
-            stroke(255, 0, 0);
-            noFill();
-            rect(0, 0, INTRINSIC_W, INTRINSIC_H);
-            textFont("Georgia");
+            textFont(MAIN_FONT_NAME);
             textAlign(CENTER);
             cursor(ARROW);
             fill(0);

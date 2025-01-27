@@ -142,7 +142,7 @@ const LEVELS_DATA = [
 			["Block", 720, 300, 30, 60],
 			["Finish", 420, 240, 30, 30],
 			
-			["Text", "Dodge bullets from cannons", 480, 150]
+			["Text", "Dodge bullets from cannons...", 480, 150]
 		],
 		"blockCol": [255, 128, 0],
 		"textCol": [255],

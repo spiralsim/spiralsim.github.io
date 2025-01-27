@@ -281,9 +281,7 @@ class Item extends Entity {
 }
 class Numeral extends Item {
     draw(pos = this.pos) {
-        // fill(255, 192);
-        // noStroke();
-        // circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        textFont(ITEM_FONT_NAME);
         colorMode(HSB);
         if (parseInt(this.name)) fill(360 * (parseInt(this.name) / 10), 100, 80);
         else fill(255);
@@ -293,19 +291,19 @@ class Numeral extends Item {
         strokeWeight(1);
         text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
         colorMode(RGB);
+        textFont(MAIN_FONT_NAME);
     }
 }
 class Operator extends Item {
     draw(pos = this.pos) {
-        // fill(255, 192);
-        // noStroke();
-        // circle(pos.x + this.w / 2, pos.y + this.h / 2, this.w);
+        textFont(ITEM_FONT_NAME);
         fill(64);
         textSize(this.w);
         textAlign(CENTER, CENTER);
         stroke(255);
         strokeWeight(1);
         text(this.name, pos.x + this.w / 2, pos.y + this.h / 2);
+        textFont(MAIN_FONT_NAME);
     }
 }
 class Machine extends Item {
