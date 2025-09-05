@@ -4,7 +4,9 @@ layout: home
 nav_order: 1
 ---
 
-Hi! I'm a UC Berkeley undergrad majoring in Electrical Engineering and Computer Sciences focusing on chip design and systems-level programming. Here you'll find links to my other profiles, personal projects, and various other stuff people ask me about.
+**Page last updated Sep 4, 2025**
+
+Hi! I'm a UC Berkeley undergrad majoring in Electrical Engineering and Computer Sciences focusing on systems programming, networking, and machine learning. Here you'll find links to my other profiles, personal projects, and various other stuff people ask me about.
 
 ## Personal Projects
 
