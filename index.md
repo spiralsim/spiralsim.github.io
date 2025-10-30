@@ -4,7 +4,7 @@ layout: home
 nav_order: 1
 ---
 
-UC Berkeley student majoring in Electrical Engineering and Computer Sciences focusing on systems programming, networking, and machine learning. Expected to graduate in December 2025.
+UC Berkeley student majoring in EE/CS focusing on systems programming, networking, and machine learning. Expected to graduate in December 2025.
 
 ## Personal Projects
 
