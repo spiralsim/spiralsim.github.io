@@ -15,7 +15,7 @@ bundle exec jekyll serve
 3. Then, see the changes at http://127.0.0.1:4000/.
 
 ## Pushing remotely
-Commit and push as usual. The changes should appear on the internet in a few minutes.
+Use `git commit` and `git push` as usual. The changes should appear on the internet in a few minutes.
 
 # Making a GitHub Pages website with Just the Docs
 Follow the instructions on the Just the Docs template.
