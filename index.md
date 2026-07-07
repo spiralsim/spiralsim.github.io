@@ -6,7 +6,7 @@ nav_order: 1
 
 Hi! Here's some things I want to share with the world.
 
-## Personal Coding Projects
+## Selected Projects
 
 | Project | Description |
 |:-|:-|
