@@ -4,18 +4,18 @@ layout: home
 nav_order: 1
 ---
 
-Hi! Here's some things I want to share with the world.
+Hi! Here's some more personal things I want to share with the world.
 
-## Selected Projects
+## Blairpath (2019 - 2026)
 
-| Project | Description |
-|:-|:-|
-| [Blairpath](http://www.blairpath.org) | Tools to help the 3000+ students, teachers, and visitors of my high school, [Montgomery Blair](https://en.wikipedia.org/wiki/Montgomery_Blair_High_School) navigate and survey its 200+ rooms and landmarks across 3 floors. Some teachers have shown it to freshmen classes to help them get around. |
+[Blairpath.org](https://www.blairpath.org) is a web application I programmed to supply tools to help the 3000+ students, teachers, and visitors of my former high school, [Montgomery Blair](https://en.wikipedia.org/wiki/Montgomery_Blair_High_School) navigate and survey its 200+ rooms and landmarks across 3 floors.
 
-## Wikipedia
+## Wikipedia (2020 - present)
 
-Under the username [User:JeffreyWTong](https://en.wikipedia.org/wiki/User:JeffreyWTong), I've contributed 1 article and 100+ edits.
+Under the username [User:JeffreyWTong](https://en.wikipedia.org/wiki/User:JeffreyWTong), I've contributed [1 article](https://en.wikipedia.org/wiki/Lifting-the-exponent_lemma) and 100+ edits.
 
-## Tetris
+## Tetris (2022 - 2024)
 
-Under the username [spiralsim](https://ch.tetr.io/u/spiralsim), at my peak I was ranked in the top 200 globally in Tetra League (a ranked 1v1 league). My [personal best for 40 Lines](https://tetr.io/#R:iWGlzgM23) is 23 seconds.
+Under the username [spiralsim](https://ch.tetr.io/u/spiralsim), at my peak ranking, I was ranked in the top 200 globally in [Tetra League](https://ch.tetr.io/lb/league) (a ranked 1v1 league).
+
+I retired from competitive Tetris in 2024, but I still play casually on occasion.
