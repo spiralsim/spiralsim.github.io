@@ -17,5 +17,3 @@ Under the username [User:JeffreyWTong](https://en.wikipedia.org/wiki/User:Jeffre
 ## Tetris (2022 - 2024)
 
 Under the username [spiralsim](https://ch.tetr.io/u/spiralsim), at my peak ranking, I was ranked in the top 200 globally in [Tetra League](https://ch.tetr.io/lb/league) (a ranked 1v1 league).
-
-I retired from competitive Tetris in 2024, but I still play casually on occasion.
