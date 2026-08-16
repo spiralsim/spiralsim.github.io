@@ -24,4 +24,4 @@ Under the username [User:JeffreyWTong](https://en.wikipedia.org/wiki/User:Jeffre
 
 ## Tetris (2022 - 2024)
 
-Under the username [spiralsim](https://ch.tetr.io/u/spiralsim), at my peak ranking, I was ranked in the top 200 globally in Tetra League (a ranked 1v1 league).
+Under the username [spiralsim](https://ch.tetr.io/u/spiralsim), at my peak ranking, I was ranked top 200 globally ([TETRA LEAGUE](https://tetrio.wiki.gg/wiki/TETRA_LEAGUE)).
