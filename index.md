@@ -4,24 +4,24 @@ layout: home
 nav_order: 1
 ---
 
-Hi! Here's some personal things I want to share with the world.
+Hi! This is a minimalist personal website.
 
-## Activities Outside Work
+## Activities Outside Work (2026-)
 
-I do a lot of:
-1. Cooking fresh meals
-1. Reading books
-1. Talking with family and friends
+These are roughly sorted in descending order of how much time I spend per week on them:
+
+1. Reading nonfiction books
+1. Talking and hanging out with family and friends
+1. Chores
 1. Jogging
-1. Going to the gym
+1. Gym
+1. Personal coding projects (this website and [Blairpath](https://www.blairpath.org/))
 1. Listening to music
 
-## Projects
+## Online Identity
 
-### Blairpath (2019-)
+### spiralsim (2024-)
+I use the username *spiralsim* in many places, deriving from [spiral similarity](https://en.wikipedia.org/wiki/Spiral_similarity).
 
-[Blairpath.org](https://www.blairpath.org) is a website I coded to help the 3000+ students and teachers of my former high school, Montgomery Blair, navigate and survey its ~300 rooms across 3 floors.
-
-### Wikipedia (2020-)
-
-Under the username [User:JeffreyWTong](https://en.wikipedia.org/wiki/User:JeffreyWTong), I've contributed 1 article and 160+ edits.
+### Rainbow Snowflake (2020-)
+I made my [rainbow snowflake profile photo](/assets/favicon.png) using [weavesilk.com](weavesilk.com).
