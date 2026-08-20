@@ -24,4 +24,4 @@ These are roughly sorted in descending order of how much time I spend per week o
 I use the username *spiralsim* in many places, deriving from [spiral similarity](https://en.wikipedia.org/wiki/Spiral_similarity).
 
 ### Rainbow Snowflake (2020-)
-I made my [rainbow snowflake profile photo](/assets/favicon.png) using [weavesilk.com](weavesilk.com).
+I made my [rainbow snowflake profile photo](/assets/favicon.png) using [weavesilk.com](http://weavesilk.com).
