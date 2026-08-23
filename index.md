@@ -8,15 +8,13 @@ Hi! This is a minimalist personal website.
 
 ## Activities Outside Work (2026-)
 
-These are roughly sorted in descending order of how much time I spend per week on them:
-
-1. Reading nonfiction books
-1. Talking and hanging out with family and friends
-1. Chores
-1. Jogging
-1. Gym
-1. Personal coding projects (this website and [Blairpath](https://www.blairpath.org/))
-1. Listening to music
+- Reading nonfiction
+- Talking and hanging out with family and friends
+- Chores
+- Jogging
+- Gym
+- Personal coding projects (this website and [Blairpath](https://www.blairpath.org/))
+- Listening to music
 
 ## Online Identity
 
